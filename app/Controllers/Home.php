@@ -10,7 +10,7 @@ class Home extends BaseController
     public function index()
     {
         if ($this->session->has('username')) {
-            return view('header', ["title" => "Dashboard"]) . view('index');
+            return view('header', ["title" => "Dashboard"]) . view('menu').view('index');
         } else {
             return view('header', ["title" => "Login - Admin"]) . view('login');
         }
@@ -59,6 +59,15 @@ class Home extends BaseController
         }
 
         echo json_encode(["user" => $res]);
+    }
+
+    public function form()
+    {
+        if ($this->session->has('username')) {
+            return view('header', ["title" => "Form"]).view('menu').view('forms');
+        } else {
+            return view('header', ["title" => "Login - Admin"]) . view('login');
+        }
     }
     public function logout()
     {

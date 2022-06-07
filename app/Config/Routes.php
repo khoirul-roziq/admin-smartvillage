@@ -39,6 +39,7 @@ $routes->get('/', 'Home::index');
 $routes->post('/login', 'Home::login');
 $routes->post('/username', 'Home::checkUsername');
 $routes->post('/password', 'Home::checkPassword');
+$routes->get('/form', 'Home::form');
 $routes->get('/logout', 'Home::logout');
 
 /*
