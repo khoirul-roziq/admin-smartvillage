@@ -10,7 +10,8 @@ class Home extends BaseController
     {
         if ($this->session->has('username')) {
             return view('index');
-        } else {
+        }
+        else {
             return view('login');
         }
     }
@@ -26,8 +27,15 @@ class Home extends BaseController
         if ($user->where(['username' => $username, 'password' => $password])->first() != NULL) {
             $this->session->set('username', $username);
             return redirect('/');
-        } else {
+        }
+        else {
             return redirect('/');
         }
+    }
+
+    public function logout()
+    {
+        $this->session->destroy();
+        return redirect('/');
     }
 }
