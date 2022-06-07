@@ -8,7 +8,6 @@ class Home extends BaseController
 {
     public function index()
     {
-        $this->session->destroy();
         if ($this->session->has('username')) {
             return view('index');
         } else {
@@ -24,7 +23,7 @@ class Home extends BaseController
         $user = new UserModel();
         // var_dump($user->where(['username' => $username, 'password' => $password]));
         var_dump($user->where('username', $username));
-        if ($user->where(['username' => $username, 'password' => $password]) != NULL) {
+        if ($user->where(['username' => $username, 'password' => $password])->first() != NULL) {
             $this->session->set('username', $username);
             return redirect('/');
         } else {
