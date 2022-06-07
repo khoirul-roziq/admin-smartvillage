@@ -1,0 +1,25 @@
+label.error {
+    color: red;
+    font-size: 1rem;
+    display: block;
+    margin-top: 3px;
+    border: 2px solid red;
+    border-radius: 4px;
+    line-height: 1;
+    padding: 2px 0 6px 6px;
+    background: #ffe6eb;
+    width: -webkit-fill-available;
+    margin-bottom: 3px;
+    text-align: center;
+}
+
+input.error {
+    border: 1px dashed red;
+    font-weight: 300;
+    color: red;
+}
+
+input.valid{
+    border: 2px solid #4CAF50;
+    color: green;
+}

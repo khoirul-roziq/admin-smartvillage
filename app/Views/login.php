@@ -5,10 +5,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Admin</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/tailwind.output.css" />
+  <link rel="stylesheet" href="../assets/css/validation.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+
   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
   <script src="../assets/js/init-alpine.js"></script>
+  <script src="../assets/js/jquery-3.6.0.js"></script>
+  <script src="../assets/js/jquery-validate-1.19.3.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script> -->
+
 </head>
 
 <body>
@@ -24,14 +33,22 @@
             <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
               Login
             </h1>
-            <form action="<?= base_url('/login') ?>" method="POST">
+            <form action="<?= base_url('/login') ?>" method="POST" id="login">
               <label class="block text-sm">
                 <span class="text-gray-700 dark:text-gray-400">Username</span>
                 <input type="text" name="username" id="username" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Enter Username" />
               </label>
-              <label class="block mt-4 text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Password</span>
-                <input name="password" id="password" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Enter Password" type="password" />
+
+              <div class="flex-auto">
+                <label class="block mt-4 text-sm">
+                  <span class="text-gray-700 dark:text-gray-400">Password</span>
+                  <div class="relative w-full">
+                    <div class="absolute right-0 flex items-center px-2">
+                      <i style="margin-top: 7px;" class="bi-eye-slash bi-aspect-ratio" id="togglePassword"></i>
+                    </div>
+                    <input name="password" id="password" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Enter Password" type="password" />
+                  </div>
+              </div>
               </label>
 
               <!-- You should use a button here, as the anchor is only used for the example  -->
@@ -68,6 +85,96 @@
       </div>
     </div>
   </div>
+
+  <script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+
+    togglePassword.addEventListener("click", function() {
+      // toggle the type attribute
+      const type = password.getAttribute("type") === "password" ? "text" : "password";
+      password.setAttribute("type", type);
+
+      // toggle the icon
+      this.classList.toggle("bi-eye");
+    });
+
+
+    $(document).ready(function() {
+      $.validator.addMethod("checkUsername", function(value, element) {
+        let res = false;
+        $.ajax({
+          url: "<?= base_url('/username') ?>",
+          type: "post",
+          async: false,
+          data: {
+            username: function() {
+              return $("#username").val();
+            },
+          },
+          dataType: 'json',
+          success: function(data) {
+
+            if (data.user == "true") {
+              res = true;
+            } else {
+              res = false;
+            }
+          }
+        })
+        return res;
+      }, "");
+
+      $.validator.addMethod("checkPassword", function(value, element) {
+        let res = false;
+        $.ajax({
+          url: "<?= base_url('/password') ?>",
+          type: "post",
+          async: false,
+          data: {
+            username: function() {
+              return $("#username").val();
+            },
+            password: function() {
+              return $("#password").val();
+            },
+          },
+          dataType: 'json',
+          success: function(data) {
+            if (data.user == "true") {
+              res = true;
+            } else {
+              res = false;
+            }
+          }
+        })
+        return res;
+      }, "");
+
+      $("#login").validate({
+        rules: {
+          username: {
+            required: true,
+            checkUsername: true
+          },
+          password: {
+            required: true,
+            checkPassword: true
+          }
+        },
+        messages: {
+          username: {
+            required: "Please Enter Your Username",
+            checkUsername: "Wrong Username"
+          },
+          password: {
+            required: "Please Enter Your Password",
+            checkPassword: "Wrong Password"
+          }
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
