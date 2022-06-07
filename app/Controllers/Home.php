@@ -3,16 +3,16 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class Home extends BaseController
 {
     public function index()
     {
         if ($this->session->has('username')) {
-            return view('index');
-        }
-        else {
-            return view('login');
+            return view('header', ["title" => "Dashboard"]) . view('index');
+        } else {
+            return view('header', ["title" => "Login - Admin"]) . view('login');
         }
     }
 
@@ -27,8 +27,7 @@ class Home extends BaseController
         if ($user->where(['username' => $username, 'password' => $password])->first() != NULL) {
             $this->session->set('username', $username);
             return redirect('/');
-        }
-        else {
+        } else {
             return redirect('/');
         }
     }
@@ -40,8 +39,7 @@ class Home extends BaseController
 
         if ($user->where("username", $username)->first() != NULL) {
             $res = "true";
-        }
-        else {
+        } else {
             $res = "false";
         }
 
@@ -56,8 +54,7 @@ class Home extends BaseController
 
         if ($user->where(["username" => $username, "password" => $password])->first() != NULL) {
             $res = "true";
-        }
-        else {
+        } else {
             $res = "false";
         }
 
