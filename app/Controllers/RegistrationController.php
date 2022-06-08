@@ -15,6 +15,7 @@ class RegistrationController extends BaseController
     {
         $db = \Config\Database::connect();
 
+
         $data = [
             'username' => $this->request->getPost("username"),
             'password'  => password_hash($this->request->getPost("password"), PASSWORD_DEFAULT),
@@ -23,6 +24,6 @@ class RegistrationController extends BaseController
 
         $db->table('users')->insert($data);
 
-        echo 'success add databas';
+        return redirect('/');
     }
 }
