@@ -8,4 +8,6 @@ class DataPelangganModel extends Model
 {
     protected $table = 'data_pelanggan';
     protected $primaryKey = 'id_pelanggan';
+
+    protected $allowedFields = ['total'];
 }
