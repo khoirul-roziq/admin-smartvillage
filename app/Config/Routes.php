@@ -42,6 +42,10 @@ $routes->post('/password', 'Home::checkPassword');
 $routes->get('/transaksi', 'Transaksi::index');
 $routes->get('/logout', 'Home::logout');
 
+
+$routes->get('registration', 'RegistrationController::index');
+$routes->post('registration/store', 'RegistrationController::store');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
