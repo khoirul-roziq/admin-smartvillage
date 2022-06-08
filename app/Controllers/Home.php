@@ -10,9 +10,9 @@ class Home extends BaseController
     public function index()
     {
         if ($this->session->has('username')) {
-            return view('header', ["title" => "Dashboard"]) . view('menu').view('index');
+            return view('header', ["title" => "Dashboard"]) . view('menu') . view('index');
         } else {
-            return view('header', ["title" => "Login - Admin"]) . view('login');
+            return view('templates/auth_header', ["title" => "Login - Admin"]) . view('auth/login') . view('templates/auth_footer');
         }
     }
 
@@ -22,9 +22,11 @@ class Home extends BaseController
         $password = $this->request->getPost("password");
 
         $user = new UserModel();
-        // var_dump($user->where(['username' => $username, 'password' => $password]));
-        var_dump($user->where('username', $username));
-        if ($user->where(['username' => $username, 'password' => $password])->first() != NULL) {
+        $tempPass = $user->where(["username" => $username])->first()['password'];
+
+        var_dump(password_verify($password, $tempPass));
+        die;
+        if (password_verify($password, $tempPass)) {
             $this->session->set('username', $username);
             return redirect('/');
         } else {
@@ -64,7 +66,7 @@ class Home extends BaseController
     public function form()
     {
         if ($this->session->has('username')) {
-            return view('header', ["title" => "Form"]).view('menu').view('forms');
+            return view('header', ["title" => "Form"]) . view('menu') . view('forms');
         } else {
             return view('header', ["title" => "Login - Admin"]) . view('login');
         }
