@@ -10,7 +10,14 @@
                     <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
                         Login
                     </h1>
+                    <?php if (session()->getFlashdata('massage')) : ?>
+                        <div class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center transition-colors duration-150 border border-transparent rounded-lg" style="color: teal; background-color:aquamarine">
+                            <span><?= session()->getFlashdata('massage'); ?></span>
+                        </div>
+                    <?php endif; ?>
+
                     <form action="<?= base_url('/login') ?>" method="POST" id="login">
+                        <?= csrf_field(); ?>
                         <label class="block text-sm">
                             <span class="text-gray-700 dark:text-gray-400">Username</span>
                             <input type="text" name="username" id="username" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Enter Username" />
