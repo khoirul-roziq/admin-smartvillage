@@ -34,6 +34,7 @@ class RegistrationController extends BaseController
         }
 
         $data = [
+            'id_user' => uniqid(),
             'username' => $this->request->getPost("username"),
             'password'  => password_hash($this->request->getPost("password1"), PASSWORD_DEFAULT),
             'role_id' => '2',

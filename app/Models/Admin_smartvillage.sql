@@ -144,11 +144,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.users: ~1 rows (approximately)
+-- Dumping data for table admin_smartvillage.users: ~2 rows (approximately)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id_user`, `username`, `password`, `nama_lengkap`, `jabatan`, `role_id`, `email`, `no_telp`, `alamat`) VALUES
-	('1', 'ahmadsyafar', '$2a$12$PMNuf2cbjHMrrvo27U/rO.Bq75DF33X2ll6k2Pm4sxnRd6Eef7HJa', 'Ahmad Syafarudin', 0, 0, 'ahmad@magang.com', '0895604395176', 'Pringsewu');
+	('1', 'ahmadsyafar', '$2a$12$PMNuf2cbjHMrrvo27U/rO.Bq75DF33X2ll6k2Pm4sxnRd6Eef7HJa', 'Ahmad Syafarudin', 0, 0, 'ahmad@magang.com', '0895604395176', 'Pringsewu'),
+	('62a19deb7cc67', 'admin', '$2y$10$yYHZ72tNP2lDqbo.7Yjeeu1eFgWCnD1RVokYy8YrTrQeAu3wShn5q', '', 0, 2, '', '', '');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
