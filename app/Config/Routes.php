@@ -45,6 +45,7 @@ $routes->get('/logout', 'Admin::logout');
 
 $routes->get('registration', 'RegistrationController::index');
 $routes->post('registration/store', 'RegistrationController::store');
+$routes->get('barang', 'BarangController::index');
 
 /*
  * --------------------------------------------------------------------

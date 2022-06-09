@@ -13,7 +13,7 @@ class Admin extends BaseController
         if ($this->session->has('username')) {
             return view('header', ["title" => "Dashboard"]) . view('menu') . view('admin/index');
         } else {
-            return view('header', ["title" => "Login - Admin"]) . view('admin/login');
+            return view('templates/auth_header', ["title" => "Login - Admin"]) . view('auth/login'). view('templates/auth_footer');
         }
     }
 
@@ -27,7 +27,8 @@ class Admin extends BaseController
 
         if (password_verify($password, $tempPass)) {
             $this->session->set('username', $username);
-            return redirect('/');
+            // return redirect('/');
+            echo 'success';
         } else {
             return redirect('/');
         }
