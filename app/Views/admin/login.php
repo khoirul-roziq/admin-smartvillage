@@ -12,6 +12,8 @@
               Login
             </h1>
             <form action="<?= base_url('/login') ?>" method="POST" id="login">
+              <input type="hidden" class="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
+
               <label class="block text-sm">
                 <span class="text-gray-700 dark:text-gray-400">Username</span>
                 <input type="text" name="username" id="username" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Enter Username" />
@@ -79,6 +81,9 @@
 
 
     $(document).ready(function() {
+      let csrfName = $('.txt_csrfname').attr('name');
+      let csrfHash = $('.txt_csrfname').val();
+
       $.validator.addMethod("checkUsername", function(value, element) {
         let res = false;
         $.ajax({
@@ -89,11 +94,14 @@
             username: function() {
               return $("#username").val();
             },
+            [csrfName]: csrfHash
           },
           dataType: 'json',
           success: function(data) {
+            csrfHash = data.csrfHash;
+            $('.txt_csrfname').val(data.csrfHash);
 
-            if (data.user == "true") {
+            if (data.admin == "true") {
               res = true;
             } else {
               res = false;
@@ -116,10 +124,14 @@
             password: function() {
               return $("#password").val();
             },
+            [csrfName]: csrfHash
           },
           dataType: 'json',
           success: function(data) {
-            if (data.user == "true") {
+            csrfHash = data.csrfHash;
+            $('.txt_csrfname').val(data.csrfHash);
+
+            if (data.admin == "true") {
               res = true;
             } else {
               res = false;

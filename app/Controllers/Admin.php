@@ -2,17 +2,18 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
-class Home extends BaseController
+use App\Models\AdminModel;
+
+
+class Admin extends BaseController
 {
     public function index()
     {
         if ($this->session->has('username')) {
-            return view('header', ["title" => "Dashboard"]) . view('menu') . view('index');
+            return view('header', ["title" => "Dashboard"]) . view('menu') . view('admin/index');
         } else {
-            return view('templates/auth_header', ["title" => "Login - Admin"]) . view('auth/login') . view('templates/auth_footer');
+            return view('header', ["title" => "Login - Admin"]) . view('admin/login');
         }
     }
 
@@ -21,11 +22,9 @@ class Home extends BaseController
         $username = $this->request->getPost("username");
         $password = $this->request->getPost("password");
 
-        $user = new UserModel();
-        $tempPass = $user->where(["username" => $username])->first()['password'];
+        $admin = new AdminModel();
+        $tempPass = $admin->where(["username" => $username])->first()['password'];
 
-        var_dump(password_verify($password, $tempPass));
-        die;
         if (password_verify($password, $tempPass)) {
             $this->session->set('username', $username);
             return redirect('/');
@@ -36,31 +35,32 @@ class Home extends BaseController
 
     public function checkUsername()
     {
-        $user = new UserModel();
+        $admin = new AdminModel();
         $username = $this->request->getPost("username");
 
-        if ($user->where("username", $username)->first() != NULL) {
+        if ($admin->where("username", $username)->first() != NULL) {
             $res = "true";
         } else {
             $res = "false";
         }
 
-        echo json_encode(["user" => $res]);
+        return $this->response->setJSON(["admin" => $res, "csrfHash" => csrf_hash()]);
     }
 
     public function checkPassword()
     {
-        $user = new UserModel();
+        $admin = new AdminModel();
         $username = $this->request->getPost("username");
         $password = $this->request->getPost("password");
+        $tempPass = $admin->where(["username" => $username])->first()['password'];
 
-        if ($user->where(["username" => $username, "password" => $password])->first() != NULL) {
+        if (password_verify($password, $tempPass)) {
             $res = "true";
         } else {
             $res = "false";
         }
 
-        echo json_encode(["user" => $res]);
+        return $this->response->setJSON(["admin" => $res, "csrfHash" => csrf_hash()]);
     }
 
     public function form()
