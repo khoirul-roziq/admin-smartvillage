@@ -32,7 +32,7 @@
                   <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                     <?php
                     foreach ($transaksi as $index => $data) {
-                      // $data2 = $total[$index];  
+                      $data2 = $total[$index];
                     ?>
                       <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
@@ -51,17 +51,27 @@
                           </div>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                          <?php if ($data["total"] != NULL) {
-                            echo "Rp" . esc(number_format($data["total"], 2, ',', '.'));
-                          } else {
-                            echo "Rp0";
-                          } ?>
+                          <?= "Rp" . esc(number_format($data2, 2, ',', '.')); ?>
                         </td>
-                        <td class="px-4 py-3 text-xs">
-                          <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                            Approved
-                          </span>
-                        </td>
+                        <?php if ($data["status"] == 1) { ?>
+                          <td class="px-4 py-3 text-xs">
+                            <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                              Approved
+                            </span>
+                          </td>
+                        <?php } else if ($data["status"] == 2) { ?>
+                          <td class="px-4 py-3 text-xs">
+                            <span class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+                              Pending
+                            </span>
+                          </td>
+                        <?php } else { ?>
+                          <td class="px-4 py-3 text-xs">
+                            <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                              Denied
+                            </span>
+                          </td>
+                        <?php } ?>
 
                         <td class="px-4 py-3">
                           <div class="flex items-center space-x-4 text-sm">

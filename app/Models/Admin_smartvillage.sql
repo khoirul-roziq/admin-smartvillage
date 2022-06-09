@@ -19,7 +19,6 @@ CREATE DATABASE IF NOT EXISTS `admin_smartvillage` /*!40100 DEFAULT CHARACTER SE
 USE `admin_smartvillage`;
 
 -- Dumping structure for table admin_smartvillage.admins
-DROP TABLE IF EXISTS `admins`;
 CREATE TABLE IF NOT EXISTS `admins` (
   `id` varchar(50) COLLATE utf8_bin NOT NULL,
   `username` varchar(50) COLLATE utf8_bin NOT NULL,
@@ -35,7 +34,6 @@ INSERT INTO `admins` (`id`, `username`, `password`, `nama`) VALUES
 /*!40000 ALTER TABLE `admins` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.data_barang
-DROP TABLE IF EXISTS `data_barang`;
 CREATE TABLE IF NOT EXISTS `data_barang` (
   `kode_barang` char(5) COLLATE utf8_bin NOT NULL,
   `nama_barang` varchar(30) COLLATE utf8_bin NOT NULL,
@@ -52,7 +50,6 @@ INSERT INTO `data_barang` (`kode_barang`, `nama_barang`, `harga_barang`) VALUES
 /*!40000 ALTER TABLE `data_barang` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.data_layanan
-DROP TABLE IF EXISTS `data_layanan`;
 CREATE TABLE IF NOT EXISTS `data_layanan` (
   `kode_layanan` char(5) COLLATE utf8_bin NOT NULL,
   `nama_layanan` varchar(30) COLLATE utf8_bin NOT NULL,
@@ -69,7 +66,6 @@ INSERT INTO `data_layanan` (`kode_layanan`, `nama_layanan`, `harga_layanan`) VAL
 /*!40000 ALTER TABLE `data_layanan` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.data_pelanggan
-DROP TABLE IF EXISTS `data_pelanggan`;
 CREATE TABLE IF NOT EXISTS `data_pelanggan` (
   `id_pelanggan` varchar(64) COLLATE utf8_bin NOT NULL,
   `nama_pelanggan` mediumtext COLLATE utf8_bin NOT NULL,
@@ -90,7 +86,6 @@ INSERT INTO `data_pelanggan` (`id_pelanggan`, `nama_pelanggan`, `nama_desa`, `no
 /*!40000 ALTER TABLE `data_pelanggan` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.data_transaksi
-DROP TABLE IF EXISTS `data_transaksi`;
 CREATE TABLE IF NOT EXISTS `data_transaksi` (
   `id_transaksi` varchar(64) COLLATE utf8_bin NOT NULL,
   `id_pelanggan` char(64) COLLATE utf8_bin NOT NULL,
@@ -98,6 +93,7 @@ CREATE TABLE IF NOT EXISTS `data_transaksi` (
   `qty` int(11) DEFAULT NULL,
   `kode_layanan` char(5) COLLATE utf8_bin DEFAULT NULL,
   `tanggal` date NOT NULL,
+  `status` tinyint(4) NOT NULL,
   PRIMARY KEY (`id_transaksi`),
   KEY `id_pelanggan` (`id_pelanggan`),
   KEY `FK_data_transaksi_data_barang` (`kode_barang`),
@@ -110,14 +106,13 @@ CREATE TABLE IF NOT EXISTS `data_transaksi` (
 -- Dumping data for table admin_smartvillage.data_transaksi: ~3 rows (approximately)
 DELETE FROM `data_transaksi`;
 /*!40000 ALTER TABLE `data_transaksi` DISABLE KEYS */;
-INSERT INTO `data_transaksi` (`id_transaksi`, `id_pelanggan`, `kode_barang`, `qty`, `kode_layanan`, `tanggal`) VALUES
-	('1', '1', '1', 2, 'L01', '2022-06-08'),
-	('2', '2', NULL, NULL, 'L01', '2022-06-08'),
-	('3', '1', '1', 1, 'L01', '2022-06-08');
+INSERT INTO `data_transaksi` (`id_transaksi`, `id_pelanggan`, `kode_barang`, `qty`, `kode_layanan`, `tanggal`, `status`) VALUES
+	('1', '1', '1', 2, 'L01', '2022-06-08', 1),
+	('2', '2', NULL, NULL, 'L01', '2022-06-08', 2),
+	('3', '1', '1', 1, 'L01', '2022-06-08', 0);
 /*!40000 ALTER TABLE `data_transaksi` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.perjanjian_kerjasama
-DROP TABLE IF EXISTS `perjanjian_kerjasama`;
 CREATE TABLE IF NOT EXISTS `perjanjian_kerjasama` (
   `id_pks` varchar(64) COLLATE utf8_bin NOT NULL,
   `nama_desa` varchar(30) COLLATE utf8_bin NOT NULL,
@@ -135,7 +130,6 @@ DELETE FROM `perjanjian_kerjasama`;
 /*!40000 ALTER TABLE `perjanjian_kerjasama` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.users
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id_user` varchar(64) COLLATE utf8_bin NOT NULL,
   `username` varchar(30) COLLATE utf8_bin NOT NULL,
