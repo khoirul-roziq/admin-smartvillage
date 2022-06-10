@@ -50,6 +50,8 @@ $routes->post('registration/store', 'RegistrationController::store');
 $routes->get('pelanggan', 'PelangganController::index');
 $routes->get('pelanggan/create', 'PelangganController::create');
 $routes->post('pelanggan/store', 'PelangganController::store');
+$routes->get('pelanggan/(:segment)/edit', 'PelangganController::edit/$1');
+$routes->post('pelanggan/update/(:segment)', 'PelangganController::update/$1');
 
 /*
  * --------------------------------------------------------------------

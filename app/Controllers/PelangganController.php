@@ -38,4 +38,31 @@ class PelangganController extends BaseController
         session()->setFlashdata('massage', 'Tambah Data Berhasil!');
         return redirect('pelanggan');
     }
+
+    public function edit($id) {
+        $pelangganModel = new DataPelangganModel();
+        $pelanggan = $pelangganModel->where(['id_pelanggan' => $id])->first();
+        
+        $data = [
+            'pelanggan' => $pelanggan
+        ];
+
+        return view("pelanggan/edit", $data);
+    }
+
+    public function update($id) {
+        $pelangganModel = new DataPelangganModel();
+        
+        $pelangganModel->save( [
+            'id_pelanggan' => $id,
+            'nama_pelanggan' => $this->request->getPost("namaPelanggan"),
+            'nama_desa'  => $this->request->getPost("namaDesa"),
+            'no_telp' => $this->request->getPost("telepon"),
+            'email' => $this->request->getPost("email"),
+            'alamat' => $this->request->getPost("alamat"),
+        ]);
+        
+        session()->setFlashdata('massage', 'Data Berhasil Diubah!');
+        return redirect('pelanggan');
+    }
 }

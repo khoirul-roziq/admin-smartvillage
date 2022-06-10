@@ -8,7 +8,7 @@
 <main class="h-full pb-16 overflow-y-auto">
     <div class="container grid px-6 mx-auto">
         <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-            Tambah Data Pelanggan
+            Edit Data Pelanggan
         </h2>
         <!-- CTA -->
         <a class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple" href="https://github.com/estevanmaito/windmill-dashboard">
@@ -22,31 +22,31 @@
         </a>
 
         <!-- Container -->
-        <form action="<?= base_url('pelanggan/store') ?>" method="post">
+        <form action="<?= base_url("pelanggan/update/".$pelanggan['id_pelanggan']); ?>" method="post">
         <?= csrf_field(); ?>
             <label class="block text-sm">
                 <span class="text-gray-700 dark:text-gray-400">Nama Pelanggan</span>
-                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="namaPelanggan" />
+                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="namaPelanggan" value="<?= $pelanggan['nama_pelanggan'] ?>" />
             </label>
             <label class="block text-sm mt-4">
                 <span class="text-gray-700 dark:text-gray-400">Nama Desa</span>
-                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="namaDesa" />
+                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="namaDesa" value="<?= $pelanggan['nama_desa'] ?>"/>
             </label>
             <label class="block text-sm mt-4">
                 <span class="text-gray-700 dark:text-gray-400">Telepon</span>
-                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="telepon" />
+                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="telepon" value="<?= $pelanggan['no_telp'] ?>"/>
             </label>
             <label class="block text-sm mt-4">
                 <span class="text-gray-700 dark:text-gray-400">Email</span>
-                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="email" />
+                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="email" value="<?= $pelanggan['email'] ?>" />
             </label>
             <label class="block text-sm mt-4">
                 <span class="text-gray-700 dark:text-gray-400">Alamat</span>
-                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="alamat" />
+                <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" name="alamat" value="<?= $pelanggan['alamat'] ?>" />
             </label>
             <div class="mt-6">
                 <button class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" type="submit">
-                    Tambah Data
+                    Perbarui Data
                 </button>
             </div>
         </form>
