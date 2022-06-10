@@ -39,8 +39,16 @@ $routes->get('/', 'Main::index');
 $routes->post('/login', 'Main::login');
 $routes->post('/username', 'Main::checkUsername');
 $routes->post('/password', 'Main::checkPassword');
-$routes->get('/transaksi', 'Transaksi::index');
 $routes->get('/logout', 'Main::logout');
+
+$routes->get('/transaksi', 'Transaksi::index');
+$routes->get('/button', 'Transaksi::button');
+$routes->get('/form', 'Transaksi::form');
+
+$routes->get('/pelanggan', 'Pelanggan::index');
+
+
+
 
 
 $routes->get('registration', 'RegistrationController::index');
@@ -57,7 +65,7 @@ $routes->post('registration/store', 'RegistrationController::store');
  * to make that happen.
  *
  * You will have access to the $routes object within that file without
- * needing to reload it.
+ * needing to reloadit.
  */
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';

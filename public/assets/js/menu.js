@@ -1,12 +1,4 @@
 $(document).ready(function () {
-  //   $("#m1").click(function () {
-  //     $("#m1").addClass("active");
-  //   });
-  //   $(".active").addClass("text-gray-800 dark:text-gray-100");
-  //   $(".active").append(
-  //     '<span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>'
-  //   );
-
   $("#login-button").click(function () {
     selectTab("dashboard");
     localStorage.setItem("tab", "dashboard");

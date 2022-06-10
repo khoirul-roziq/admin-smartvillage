@@ -20,10 +20,11 @@
             </h4>
             <div class="flex flex-col flex-wrap mb-8 space-y-4 md:flex-row md:items-end md:space-x-4">
               <button class="flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2 -ml-1" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
-                  <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2 -ml-1" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                  <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                  <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z" />
                 </svg>
-                <span>Tambah Transaksi</span>
+                <span>Tambah Pelanggan</span>
               </button>
             </div>
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
@@ -31,16 +32,16 @@
                 <table class="w-full whitespace-no-wrap" id="dataTable">
                   <thead>
                     <tr class=" text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                      <th class="px-4 py-3">Client</th>
-                      <th class="px-4 py-3">Amount</th>
-                      <th class="px-4 py-3">Status</th>
+                      <th class="px-4 py-3">Nama</th>
+                      <th class="px-4 py-3">Kontak</th>
+                      <th class="px-4 py-3">Email</th>
                       <th class="px-4 py-3">Actions</th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                     <?php
-                    foreach ($transaksi as $index => $data) {
-                      $data2 = $total[$index];
+                    foreach ($pelanggan as $index => $data) {
+                      // $data2 = $total[$index];
                     ?>
                       <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
@@ -53,33 +54,17 @@
                             <div>
                               <p class="font-semibold"><?= esc($data["nama_pelanggan"]) ?></p>
                               <p class="text-xs text-gray-600 dark:text-gray-400">
-                                <?= esc($data["nama_desa"]) ?>
+                                <?= esc($data["alamat"]) ?>
                               </p>
                             </div>
                           </div>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                          <?= "Rp" . esc(number_format($data2, 2, ',', '.')); ?>
+                          <?= $data["no_telp"] ?>
                         </td>
-                        <?php if ($data["status"] == 1) { ?>
-                          <td class="px-4 py-3 text-xs">
-                            <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                              Approved
-                            </span>
-                          </td>
-                        <?php } else if ($data["status"] == 2) { ?>
-                          <td class="px-4 py-3 text-xs">
-                            <span class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
-                              Pending
-                            </span>
-                          </td>
-                        <?php } else { ?>
-                          <td class="px-4 py-3 text-xs">
-                            <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
-                              Denied
-                            </span>
-                          </td>
-                        <?php } ?>
+                        <td class="px-4 py-3 text-xs">
+                          <?= $data["email"] ?>
+                        </td>
 
                         <td class="px-4 py-3">
                           <div class="flex items-center space-x-4 text-sm">

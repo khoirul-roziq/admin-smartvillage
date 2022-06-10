@@ -75,6 +75,15 @@ class Transaksi extends BaseController
             "transaksi" => $transaksi->findAll(),
             "total" => $total
         ];
-        return view('header', ["title" => "Transaksi"]) . view('menu') . view('admin/transaksi', $data);
+        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi', $data);
+    }
+
+    public function button()
+    {
+        return view('buttons');
+    }
+    public function form()
+    {
+        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('forms');
     }
 }

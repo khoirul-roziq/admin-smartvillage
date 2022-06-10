@@ -10,9 +10,9 @@ class Main extends BaseController
     public function index()
     {
         if ($this->session->has('username')) {
-            return view('header', ["title" => "Dashboard"]) . view('menu') . view('admin/index');
+            return view('templates/header', ["title" => "Dashboard"]) . view('templates/menu') . view('admin/index');
         } else {
-            return view('header', ["title" => "Login - Admin"]) . view('auth/login');
+            return view('templates/header', ["title" => "Login - Admin"]) . view('auth/login');
         }
     }
 
@@ -62,14 +62,6 @@ class Main extends BaseController
         return $this->response->setJSON(["user" => $res, "csrfHash" => csrf_hash()]);
     }
 
-    public function form()
-    {
-        if ($this->session->has('username')) {
-            return view('header', ["title" => "Form"]) . view('menu') . view('forms');
-        } else {
-            return view('header', ["title" => "Login - Admin"]) . view('login');
-        }
-    }
     public function logout()
     {
         $this->session->destroy();
