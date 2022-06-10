@@ -45,7 +45,11 @@ $routes->get('/logout', 'Admin::logout');
 
 $routes->get('registration', 'RegistrationController::index');
 $routes->post('registration/store', 'RegistrationController::store');
-$routes->get('barang', 'BarangController::index');
+
+// Route for Pelanggan
+$routes->get('pelanggan', 'PelangganController::index');
+$routes->get('pelanggan/create', 'PelangganController::create');
+$routes->post('pelanggan/store', 'PelangganController::store');
 
 /*
  * --------------------------------------------------------------------

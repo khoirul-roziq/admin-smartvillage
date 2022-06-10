@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="../assets/css/tailwind.output.css" />
   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
   <script src="../assets/js/init-alpine.js"></script>
+
+  <?= $this->renderSection('toolsHeader') ?>
+
 </head>
 
 <body>
@@ -365,11 +368,13 @@
       <main class="h-full pb-16 overflow-y-auto">
         <!-- Remove everything INSIDE this div to a really blank page -->
         <div class="container px-6 mx-auto grid">
-<?= $this->renderSection('content') ?>
+          <?= $this->renderSection('content') ?>
         </div>
       </main>
     </div>
   </div>
 </body>
+
+<?= $this->renderSection('toolsFooter') ?>
 
 </html>
