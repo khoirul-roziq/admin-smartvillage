@@ -1,25 +1,12 @@
         <main class="h-full pb-16 overflow-y-auto">
           <div class="container grid px-6 mx-auto">
-            <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-              Tables
-            </h2>
-            <!-- CTA -->
-            <a class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple" href="https://github.com/estevanmaito/windmill-dashboard">
-              <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                </svg>
-                <span>Star this project on GitHub</span>
-              </div>
-              <span>View more &RightArrow;</span>
-            </a>
 
             <!-- With actions -->
-            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            <h4 class="mb-4 my-6 text-lg font-semibold text-gray-600 dark:text-gray-300">
               Data Transaksi
             </h4>
             <div class="flex flex-col flex-wrap mb-8 space-y-4 md:flex-row md:items-end md:space-x-4">
-              <button class="flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <button onclick="window.location.href=`<?= base_url('/transaksi/create') ?>`" class="flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2 -ml-1" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                   <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z" />
                 </svg>
@@ -34,13 +21,14 @@
                       <th class="px-4 py-3">Client</th>
                       <th class="px-4 py-3">Amount</th>
                       <th class="px-4 py-3">Status</th>
+                      <th class="px-4 py-3">Tanggal</th>
                       <th class="px-4 py-3">Actions</th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                     <?php
                     foreach ($transaksi as $index => $data) {
-                      $data2 = $total[$index];
+                      // $data2 = $total[$index];
                     ?>
                       <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">
@@ -59,7 +47,7 @@
                           </div>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                          <?= "Rp" . esc(number_format($data2, 2, ',', '.')); ?>
+                          <?= "Rp" . esc(number_format($data["total"], 2, ',', '.')); ?>
                         </td>
                         <?php if ($data["status"] == 1) { ?>
                           <td class="px-4 py-3 text-xs">
@@ -80,7 +68,9 @@
                             </span>
                           </td>
                         <?php } ?>
-
+                        <td class="px-4 py-3 text-sm">
+                          <?= esc($data["tanggal"]) ?>
+                        </td>
                         <td class="px-4 py-3">
                           <div class="flex items-center space-x-4 text-sm">
                             <button class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray" aria-label="Edit">

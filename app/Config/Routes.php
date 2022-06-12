@@ -42,8 +42,11 @@ $routes->post('/password', 'Main::checkPassword');
 $routes->get('/logout', 'Main::logout');
 
 $routes->get('/transaksi', 'Transaksi::index');
+$routes->get('/transaksi/create', 'Transaksi::createForm');
 $routes->get('/button', 'Transaksi::button');
 $routes->get('/form', 'Transaksi::form');
+$routes->post('/add-transaksi', 'Transaksi::create');
+
 
 $routes->get('/pelanggan', 'Pelanggan::index');
 

@@ -10,4 +10,6 @@ class DataTransaksiModel extends Model
     protected $primaryKey = 'id_transaksi';
 
     protected $returnType = 'array';
+
+    protected $allowedFields = ['id_transaksi', 'id_pelanggan', 'kode_barang', 'qty', 'kode_layanan', 'total', 'tanggal', 'status'];
 }
