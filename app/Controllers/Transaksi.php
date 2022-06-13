@@ -107,10 +107,19 @@ class Transaksi extends BaseController
         return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi', ["transaksi" => $data_transaksi]);
     }
 
-    public function button()
+    public function cards()
     {
-        return view('buttons');
+        return view('cards');
     }
+    public function modals()
+    {
+        return view('modals');
+    }
+    public function charts()
+    {
+        return view('charts');
+    }
+
     public function form()
     {
         return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('forms');
@@ -167,5 +176,14 @@ class Transaksi extends BaseController
             }
         }
         return redirect()->to('/transaksi');
+    }
+
+    public function detail($id, $tanggal)
+    {
+        $transaksi = new DataTransaksiModel();
+
+        $data = ["transaksi" => $transaksi->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll()];
+
+        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/detail_transaksi', $data);
     }
 }
