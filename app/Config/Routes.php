@@ -43,9 +43,12 @@ $routes->get('/logout', 'Main::logout');
 
 $routes->get('/transaksi', 'Transaksi::index');
 $routes->get('/transaksi/create', 'Transaksi::createForm');
-$routes->get('/button', 'Transaksi::button');
-$routes->get('/form', 'Transaksi::form');
-$routes->post('/add-transaksi', 'Transaksi::create');
+$routes->get('/cards', 'Transaksi::cards');
+$routes->get('/modals', 'Transaksi::modals');
+$routes->get('/charts', 'Transaksi::charts');
+
+$routes->add('/add-transaksi', 'Transaksi::create');
+$routes->get('/transaksi/detail/(:any)', 'Transaksi::detail/$1');
 
 
 $routes->get('/pelanggan', 'Pelanggan::index');

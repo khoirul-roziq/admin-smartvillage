@@ -73,16 +73,15 @@ CREATE TABLE IF NOT EXISTS `data_pelanggan` (
   `no_telp` varchar(20) COLLATE utf8_bin NOT NULL,
   `email` varchar(50) COLLATE utf8_bin NOT NULL,
   `alamat` mediumtext COLLATE utf8_bin NOT NULL,
-  `total` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_pelanggan`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Dumping data for table admin_smartvillage.data_pelanggan: ~2 rows (approximately)
 DELETE FROM `data_pelanggan`;
 /*!40000 ALTER TABLE `data_pelanggan` DISABLE KEYS */;
-INSERT INTO `data_pelanggan` (`id_pelanggan`, `nama_pelanggan`, `nama_desa`, `no_telp`, `email`, `alamat`, `total`) VALUES
-	('1', 'Ahmad Syafarudin', 'Pringsewu', '0895604395176', 'ahmad@gmail.com', 'Jl. Kesehatan Pringsewu Selatan', 80000000),
-	('2', 'Khoirul Roziq', 'Sekampung', '0815131325255', 'khoirul@gmail.com', 'Jl. Tanjung Raya Sekampung, Lampung Timur', 10000000);
+INSERT INTO `data_pelanggan` (`id_pelanggan`, `nama_pelanggan`, `nama_desa`, `no_telp`, `email`, `alamat`) VALUES
+	('1', 'Ahmad Syafarudin', 'Pringsewu', '0895604395176', 'ahmad@gmail.com', 'Jl. Kesehatan Pringsewu Selatan'),
+	('2', 'Khoirul Roziq', 'Sekampung', '0815131325255', 'khoirul@gmail.com', 'Jl. Tanjung Raya Sekampung, Lampung Timur');
 /*!40000 ALTER TABLE `data_pelanggan` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.data_transaksi
@@ -92,6 +91,7 @@ CREATE TABLE IF NOT EXISTS `data_transaksi` (
   `kode_barang` char(5) COLLATE utf8_bin DEFAULT NULL,
   `qty` int(11) DEFAULT NULL,
   `kode_layanan` char(5) COLLATE utf8_bin DEFAULT NULL,
+  `total` bigint(20) DEFAULT NULL,
   `tanggal` date NOT NULL,
   `status` tinyint(4) NOT NULL,
   PRIMARY KEY (`id_transaksi`),
@@ -103,13 +103,18 @@ CREATE TABLE IF NOT EXISTS `data_transaksi` (
   CONSTRAINT `data_transaksi_ibfk_2` FOREIGN KEY (`id_pelanggan`) REFERENCES `data_pelanggan` (`id_pelanggan`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.data_transaksi: ~3 rows (approximately)
+-- Dumping data for table admin_smartvillage.data_transaksi: ~8 rows (approximately)
 DELETE FROM `data_transaksi`;
 /*!40000 ALTER TABLE `data_transaksi` DISABLE KEYS */;
-INSERT INTO `data_transaksi` (`id_transaksi`, `id_pelanggan`, `kode_barang`, `qty`, `kode_layanan`, `tanggal`, `status`) VALUES
-	('1', '1', '1', 2, 'L01', '2022-06-08', 1),
-	('2', '2', NULL, NULL, 'L01', '2022-06-08', 2),
-	('3', '1', '1', 1, 'L01', '2022-06-08', 0);
+INSERT INTO `data_transaksi` (`id_transaksi`, `id_pelanggan`, `kode_barang`, `qty`, `kode_layanan`, `total`, `tanggal`, `status`) VALUES
+	('62a4a3ae21f87', '2', '2', 3, NULL, 15000000, '2022-06-11', 2),
+	('62a4a3e55ef85', '1', NULL, 0, 'L02', 3000000, '2022-06-11', 2),
+	('62a4a42ab7c63', '1', '1', 1, 'L02', 33000000, '2022-06-11', 2),
+	('62a4a42aba848', '1', '2', 1, NULL, 5000000, '2022-06-11', 2),
+	('62a6659c80786', '2', NULL, 0, 'L02', 3000000, '2022-06-11', 2),
+	('62a66767a147d', '1', NULL, 0, 'L02', 3000000, '2022-06-13', 2),
+	('62a6678a99021', '2', NULL, 0, 'L02', 3000000, '2022-06-13', 2),
+	('62a6686396e34', '1', '1', 1, NULL, 30000000, '2022-06-13', 2);
 /*!40000 ALTER TABLE `data_transaksi` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.perjanjian_kerjasama
@@ -144,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.users: ~2 rows (approximately)
+-- Dumping data for table admin_smartvillage.users: ~1 rows (approximately)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id_user`, `username`, `password`, `nama_lengkap`, `jabatan`, `role_id`, `email`, `no_telp`, `alamat`) VALUES
