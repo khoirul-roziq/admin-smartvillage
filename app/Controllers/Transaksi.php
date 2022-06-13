@@ -182,8 +182,82 @@ class Transaksi extends BaseController
     {
         $transaksi = new DataTransaksiModel();
 
-        $data = ["transaksi" => $transaksi->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll()];
+        $data = [];
+        foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $order) {
+            if ($order["kode_barang"] == NULL) {
+                $transaksi->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
+                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
 
-        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/detail_transaksi', $data);
+                foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $detail) {
+                    $data2 = [
+                        "id_pelanggan" => $detail["id_pelanggan"],
+                        "nama_pelanggan" => $detail["nama_pelanggan"],
+                        "alamat" => $detail["alamat"],
+                        "no_telp" => $detail["no_telp"],
+                        "nama_barang" => NULL,
+                        "harga_barang" => NULL,
+                        "qty" => NULL,
+                        "nama_layanan" => $detail["nama_layanan"],
+                        "harga_layanan" => $detail["harga_layanan"],
+                        "total" => $detail["total"],
+                        "tanggal" => $detail["tanggal"]
+                    ];
+
+                    array_push($data, $data2);
+                }
+            } else if ($order["kode_layanan"] == NULL) {
+                $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
+                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+
+                foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $detail) {
+                    $data2 = [
+                        "id_pelanggan" => $detail["id_pelanggan"],
+                        "nama_pelanggan" => $detail["nama_pelanggan"],
+                        "alamat" => $detail["alamat"],
+                        "no_telp" => $detail["no_telp"],
+                        "nama_barang" => $detail["nama_barang"],
+                        "harga_barang" => $detail["harga_barang"],
+                        "qty" => $detail["qty"],
+                        "nama_layanan" => NULL,
+                        "harga_layanan" => NULL,
+                        "total" => $detail["total"],
+                        "tanggal" => $detail["tanggal"]
+                    ];
+
+                    array_push($data, $data2);
+                }
+            } else {
+                $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
+                    ->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
+                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+
+                foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $detail) {
+                    $data2 = [
+                        "id_pelanggan" => $detail["id_pelanggan"],
+                        "nama_pelanggan" => $detail["nama_pelanggan"],
+                        "alamat" => $detail["alamat"],
+                        "no_telp" => $detail["no_telp"],
+                        "nama_barang" => $detail["nama_barang"],
+                        "harga_barang" => $detail["harga_barang"],
+                        "qty" => $detail["qty"],
+                        "nama_layanan" => $detail["nama_layanan"],
+                        "harga_layanan" => $detail["harga_layanan"],
+                        "total" => $detail["total"],
+                        "tanggal" => $detail["tanggal"]
+                    ];
+
+                    array_push($data, $data2);
+                }
+            }
+        }
+
+        // $data = [
+        //     "transaksi" => $transaksi->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")
+        //         ->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
+        //         ->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
+        //         ->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll()
+        // ];
+
+        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/detail_transaksi', ["transaksi" => $data]);
     }
 }
