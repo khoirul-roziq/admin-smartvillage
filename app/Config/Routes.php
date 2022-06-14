@@ -47,15 +47,16 @@ $routes->get('/cards', 'Transaksi::cards');
 $routes->get('/modals', 'Transaksi::modals');
 $routes->get('/charts', 'Transaksi::charts');
 
-$routes->add('/add-transaksi', 'Transaksi::create');
+$routes->add('/transaksi/add', 'Transaksi::create');
 $routes->get('/transaksi/detail/(:any)', 'Transaksi::detail/$1');
-
+$routes->get('/transaksi/approve/(:any)', 'Transaksi::approve/$1');
+$routes->get('/transaksi/pending/(:any)', 'Transaksi::pending/$1');
+$routes->get('/transaksi/cancel/(:any)', 'Transaksi::cancel/$1');
+$routes->get('/transaksi/edit/(:segment)', 'Transaksi::editForm/$1');
+$routes->add('/transaksi/edit', 'Transaksi::edit');
+$routes->get('/transaksi/delete/(:segment)', 'Transaksi::delete/$1');
 
 $routes->get('/pelanggan', 'Pelanggan::index');
-
-
-
-
 
 $routes->get('registration', 'RegistrationController::index');
 $routes->post('registration/store', 'RegistrationController::store');
