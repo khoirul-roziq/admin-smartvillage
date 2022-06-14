@@ -188,8 +188,9 @@ class Transaksi extends BaseController
                 $transaksi->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
                     ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
 
-                foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $detail) {
+                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
                     $data2 = [
+                        "id_transaksi" => $detail["id_transaksi"],
                         "id_pelanggan" => $detail["id_pelanggan"],
                         "nama_pelanggan" => $detail["nama_pelanggan"],
                         "alamat" => $detail["alamat"],
@@ -209,8 +210,9 @@ class Transaksi extends BaseController
                 $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
                     ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
 
-                foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $detail) {
+                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
                     $data2 = [
+                        "id_transaksi" => $detail["id_transaksi"],
                         "id_pelanggan" => $detail["id_pelanggan"],
                         "nama_pelanggan" => $detail["nama_pelanggan"],
                         "alamat" => $detail["alamat"],
@@ -231,8 +233,9 @@ class Transaksi extends BaseController
                     ->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
                     ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
 
-                foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $detail) {
+                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
                     $data2 = [
+                        "id_transaksi" => $detail["id_transaksi"],
                         "id_pelanggan" => $detail["id_pelanggan"],
                         "nama_pelanggan" => $detail["nama_pelanggan"],
                         "alamat" => $detail["alamat"],
@@ -250,14 +253,87 @@ class Transaksi extends BaseController
                 }
             }
         }
-
-        // $data = [
-        //     "transaksi" => $transaksi->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")
-        //         ->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
-        //         ->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
-        //         ->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll()
-        // ];
-
         return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/detail_transaksi', ["transaksi" => $data]);
+    }
+
+    public function approve($id, $tanggal)
+    {
+        $transaksi = new DataTransaksiModel();
+
+        foreach ($transaksi->where(["id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $order) {
+            $transaksi->update(["id_transaksi" => $order["id_transaksi"]], ["status" => 1]);
+        }
+
+        return redirect()->to('/transaksi');
+    }
+
+    public function pending($id, $tanggal)
+    {
+        $transaksi = new DataTransaksiModel();
+
+        foreach ($transaksi->where(["id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $order) {
+            $transaksi->update(["id_transaksi" => $order["id_transaksi"]], ["status" => 2]);
+        }
+
+        return redirect()->to('/transaksi');
+    }
+
+    public function cancel($id, $tanggal)
+    {
+        $transaksi = new DataTransaksiModel();
+
+        foreach ($transaksi->where(["id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $order) {
+            $transaksi->update(["id_transaksi" => $order["id_transaksi"]], ["status" => 0]);
+        }
+
+        return redirect()->to('/transaksi');
+    }
+
+    public function editForm($id_transaksi)
+    {
+        $pelanggan = new DataPelangganModel();
+        $transaksi = new DataTransaksiModel();
+        $barang = new DataBarangModel();
+        $layanan = new DataLayananModel();
+
+        $data = [
+            "pelanggan" => $pelanggan->findAll(),
+            "transaksi" => $transaksi->find($id_transaksi),
+            "barang" => $barang->findAll(),
+            "layanan" => $layanan->findAll()
+        ];
+
+        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/edit_transaksi', $data);
+    }
+    public function edit()
+    {
+        $transaksi = new DataTransaksiModel();
+        $barang = new DataBarangModel();
+        $layanan = new DataLayananModel();
+
+        if ($this->request->getPost("barang") == NULL) {
+            $total = $layanan->select("harga_layanan")->find($this->request->getPost("layanan"))["harga_layanan"];
+        } else if ($this->request->getPost("layanan") ==  NULL) {
+            $total = $barang->select("harga_barang")->find($this->request->getPost("barang"))["harga_barang"] * $this->request->getPost("qty");
+        } else {
+            $total = ($barang->select("harga_barang")->find($this->request->getPost("barang"))["harga_barang"] * $this->request->getPost("qty")
+                + $layanan->select("harga_layanan")->find($this->request->getPost("layanan"))["harga_layanan"]);
+        }
+
+        $transaksi->update(
+            ["id_transaksi" => $this->request->getPost("id_transaksi")],
+            [
+                "kode_barang" => $this->request->getPost("barang"),
+                "kode_layanan" => $this->request->getPost("layanan"),
+                "qty" => $this->request->getPost("qty"),
+                "total" => $total
+            ]
+        );
+
+        $id = $this->request->getPost("pelanggan");
+        $tanggal = $this->request->getPost("tanggal");
+
+
+        return redirect()->to('/transaksi/detail/' . $id . '/' . $tanggal);
     }
 }
