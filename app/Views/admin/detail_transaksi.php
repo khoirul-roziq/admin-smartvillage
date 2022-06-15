@@ -1,6 +1,7 @@
 <main class="h-full pb-16 overflow-y-auto">
   <div class="container grid px-6 mx-auto">
 
+    
     <!-- With actions -->
     <h4 class="mb-4 my-6 text-lg font-semibold text-gray-600 dark:text-gray-300">
       Detail Transaksi
@@ -28,6 +29,10 @@
         </div>
       </div>
     </div>
+    <button class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" style="width: 100px;">
+      Nota
+    </button>
+    <br>
     <div class="w-full overflow-hidden rounded-lg shadow-xs">
       <div class="w-full overflow-x-auto">
         <table class="w-full whitespace-no-wrap" id="dataTable">

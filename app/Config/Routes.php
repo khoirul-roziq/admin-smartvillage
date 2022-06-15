@@ -61,6 +61,9 @@ $routes->get('/pelanggan', 'Pelanggan::index');
 $routes->get('registration', 'RegistrationController::index');
 $routes->post('registration/store', 'RegistrationController::store');
 
+$routes->get('/transaksi/nota/(:any)', 'NotaController::index/$1');
+$routes->get('/transaksi/nota-download/(:any)', 'NotaController::download/$1');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
