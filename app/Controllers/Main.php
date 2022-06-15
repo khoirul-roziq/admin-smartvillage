@@ -10,7 +10,7 @@ class Main extends BaseController
     public function index()
     {
         if ($this->session->has('username')) {
-            return view('templates/header', ["title" => "Dashboard"]) . view('templates/menu') . view('admin/index');
+            return view('templates/header', ["title" => "Dashboard"]) . view('templates/menu') . view('admin/dashboard/index');
         } else {
             return view('templates/header', ["title" => "Login - Admin"]) . view('auth/login');
         }
