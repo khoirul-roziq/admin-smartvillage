@@ -9,7 +9,9 @@ use App\Models\DataTransaksiModel;
 use App\Models\DataLayananModel;
 use DateTime;
 use Kint\Zval\Value;
+use TCPDF;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class NotaController extends BaseController
 {
@@ -178,24 +180,7 @@ class NotaController extends BaseController
                 }
             }
         }
-        // return view('templates/header', ["title" => "Transaksi"]) . view('nota/index', ["transaksi" => $data]);
+        return view('templates/header', ["title" => "Transaksi"]) . view('nota/download', ["transaksi" => $data]);
 
-        
-        $filename = 'Nota Transaksi'.date('y-m-d-H-i-s');
-
-        // instantiate and use the dompdf class
-        $dompdf = new Dompdf();
-
-        // load HTML content
-        $dompdf->loadHtml(view('templates/header', ["title" => "Transaksi"]) . view('nota/index', ["transaksi" => $data]));
-
-        // (optional) setup the paper size and orientation
-        $dompdf->setPaper('A4', 'landscape');
-
-        // render html as PDF
-        $dompdf->render();
-
-        // output the generated pdf
-        $dompdf->stream($filename);
     }
 }

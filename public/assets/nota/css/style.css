@@ -1,7 +1,11 @@
 .nota {
     width: 100%;
-    padding-top: 50px;
+    padding-top: 10px;
     background-color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 3%;
+    box-sizing: border-box;
 }
 
 .nota .brand {
@@ -55,9 +59,8 @@
     text-align: center;
 }
 
-.nota main .data thead {
-    background-color: #074c93;
-    color: white;
+.nota thead {
+    color: black;
 }
 
 .nota main .data th {
@@ -109,7 +112,7 @@
 .nota footer h1 {
     text-align: center;
     font-size: 25px;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .nota main .flor .col-2 div:last-child {
