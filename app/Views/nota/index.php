@@ -56,6 +56,7 @@
         <div class="data">
             <table>
                 <thead>
+
                     <tr>
                         <th>No</th>
                         <th>SKV</th>
@@ -98,7 +99,6 @@
                         <?php endif; ?>
                     <?php endforeach;
                     ?>
-
                 </tbody>
             </table>
         </div>
@@ -115,7 +115,7 @@
             <div class="col-2">
                 <div>
                     <p>Total</p>
-                    <p>Rp. <?= $totalHarga; ?></p>
+                    <p><?= "Rp. " . esc(number_format($totalHarga, 2, ',', '.')); ?></p>
                 </div>
                 <div>
                     <p>Hormat Kami,</p>
