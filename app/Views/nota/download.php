@@ -5,6 +5,7 @@
     $nama = $transaksi[0]["nama_pelanggan"];
     $alamat = $transaksi[0]["alamat"];
     $telp = $transaksi[0]["no_telp"];
+    $tanggal = $transaksi[0]["tanggal"];
     ?>
 
     <header>
@@ -25,7 +26,7 @@
                     </tr>
                     <tr>
                         <td width="80px">Date</td>
-                        <td>: 15-Dec-21</td>
+                        <td>: <?= date('d-M-y', strtotime($tanggal)) ?></td>
                     </tr>
                 </table>
             </div>
@@ -50,13 +51,12 @@
 
 
     </header>
+
     <main>
         <div class="data">
             <table>
                 <thead>
-                    <div class="bg-table">
-                        <img src="<?= base_url('assets/nota/img/header-nota.png'); ?>" alt="">
-                    </div>
+
                     <tr>
                         <th>No</th>
                         <th>SKV</th>
@@ -73,31 +73,32 @@
 
                     foreach ($transaksi as $index => $data) : ?>
                         <?php if (esc($data["kode_barang"] != NULL)) : ?>
-                            <td><?php echo $no; $no++;  ?></td>
+                            <td><?php echo $no;
+                                $no++;  ?></td>
                             <td><?php echo esc($data["kode_barang"]); ?></td>
-                            <td><?php echo esc($data["nama_barang"]);?></td>
+                            <td><?php echo esc($data["nama_barang"]); ?></td>
                             <td><?php echo esc($data["qty"]);  ?></td>
-                            <td><?php echo "Rp" . esc(number_format($data["harga_barang"], 2, ',', '.'));?></td>
+                            <td><?php echo "Rp" . esc(number_format($data["harga_barang"], 2, ',', '.')); ?></td>
                             <td><?= "Rp" . esc(number_format($data["harga_barang"] * $data["qty"], 2, ',', '.')); ?></td>
-                            <?php $totalHarga += ($data["harga_barang"] * $data["qty"]);?>
+                            <?php $totalHarga += ($data["harga_barang"] * $data["qty"]); ?>
                             </tr>
                         <?php endif; ?>
-                    <?php endforeach; 
-                    
+                    <?php endforeach;
+
                     foreach ($transaksi as $index => $data) : ?>
                         <?php if (esc($data["kode_layanan"] != NULL)) : ?>
-                            <td><?php echo $no; $no++;  ?></td>
+                            <td><?php echo $no;
+                                $no++;  ?></td>
                             <td><?php echo esc($data["kode_layanan"]); ?></td>
-                            <td><?php echo esc($data["nama_layanan"]);?></td>
+                            <td><?php echo esc($data["nama_layanan"]); ?></td>
                             <td>1</td>
-                            <td><?php echo "Rp" . esc(number_format($data["harga_layanan"], 2, ',', '.'));?></td>
+                            <td><?php echo "Rp" . esc(number_format($data["harga_layanan"], 2, ',', '.')); ?></td>
                             <td><?= "Rp" . esc(number_format($data["harga_layanan"], 2, ',', '.')); ?></td>
-                            <?php $totalHarga += $data["harga_layanan"];?>
+                            <?php $totalHarga += $data["harga_layanan"]; ?>
                             </tr>
                         <?php endif; ?>
-                    <?php endforeach; 
+                    <?php endforeach;
                     ?>
-                    
                 </tbody>
             </table>
         </div>
@@ -114,7 +115,7 @@
             <div class="col-2">
                 <div>
                     <p>Total</p>
-                    <p>Rp. <?= $totalHarga; ?></p>
+                    <p><?= "Rp. " . esc(number_format($totalHarga, 2, ',', '.')); ?></p>
                 </div>
                 <div>
                     <p>Hormat Kami,</p>
