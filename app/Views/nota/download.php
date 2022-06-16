@@ -56,7 +56,9 @@
         <div class="data">
             <table>
                 <thead>
-
+                    <div class="bg-table">
+                        <img src="<?= base_url('assets/nota/img/header-nota.png') ?>" alt="">
+                    </div>
                     <tr>
                         <th>No</th>
                         <th>SKV</th>
