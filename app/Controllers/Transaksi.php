@@ -7,6 +7,7 @@ use App\Controllers\BaseController;
 use App\Models\DataBarangModel;
 use App\Models\DataTransaksiModel;
 use App\Models\DataLayananModel;
+use App\Models\PerjanjianKerjasamaModel;
 use DateTime;
 use Kint\Zval\Value;
 
@@ -16,114 +17,100 @@ class Transaksi extends BaseController
     {
         $transaksi = new DataTransaksiModel();
 
+        if ($this->session->has('username')) {
+            foreach ($transaksi->findAll() as $order) {
+                if ($order["kode_barang"] == NULL) {
+                    $transaksi->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner");
 
-        foreach ($transaksi->findAll() as $order) {
-            if ($order["kode_barang"] == NULL) {
-                $transaksi->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner");
+                    foreach ($transaksi->where("id_transaksi", $order["id_transaksi"])->findAll() as $harga) {
+                        $transaksi->update(["id_transaksi" => $harga["id_transaksi"]], ["total" => $harga["harga_layanan"]]);
+                    }
+                } else if ($order["kode_layanan"] == NULL) {
+                    $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner");
 
-                foreach ($transaksi->where("id_transaksi", $order["id_transaksi"])->findAll() as $harga) {
-                    $transaksi->update(["id_transaksi" => $harga["id_transaksi"]], ["total" => $harga["harga_layanan"]]);
-                }
-            } else if ($order["kode_layanan"] == NULL) {
-                $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner");
+                    foreach ($transaksi->where("id_transaksi", $order["id_transaksi"])->findAll() as $harga) {
+                        $transaksi->update(["id_transaksi" => $harga["id_transaksi"]], ["total" => $harga["harga_barang"] * $order["qty"]]);
+                    }
+                } else {
+                    $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner");
+                    $transaksi->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner");
 
-                foreach ($transaksi->where("id_transaksi", $order["id_transaksi"])->findAll() as $harga) {
-                    $transaksi->update(["id_transaksi" => $harga["id_transaksi"]], ["total" => $harga["harga_barang"] * $order["qty"]]);
-                }
-            } else {
-                $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner");
-                $transaksi->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner");
-
-                foreach ($transaksi->where("id_transaksi", $order["id_transaksi"])->findAll() as $harga) {
-                    $transaksi->update(["id_transaksi" => $harga["id_transaksi"]], ["total" => $harga["harga_barang"] * $order["qty"] + $harga["harga_layanan"]]);
+                    foreach ($transaksi->where("id_transaksi", $order["id_transaksi"])->findAll() as $harga) {
+                        $transaksi->update(["id_transaksi" => $harga["id_transaksi"]], ["total" => $harga["harga_barang"] * $order["qty"] + $harga["harga_layanan"]]);
+                    }
                 }
             }
-        }
 
-        $id_pelanggan = $transaksi->select("data_transaksi.id_pelanggan")->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")->orderBy("data_transaksi.id_pelanggan")->first();
-        $nama_pelanggan = $transaksi->select("nama_pelanggan")->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")->orderBy("data_transaksi.id_pelanggan")->first();
-        $nama_desa = $transaksi->select("nama_desa")->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")->orderBy("data_transaksi.id_pelanggan")->first();
-        $total = $transaksi->select("total")->orderBy("data_transaksi.id_pelanggan")->first();
-        $tanggal = $transaksi->select("tanggal")->orderBy("data_transaksi.id_pelanggan")->first();
-        $status = $transaksi->select("status")->orderBy("data_transaksi.id_pelanggan")->first();
-        $temp_tanggal = $transaksi->select("tanggal")->orderBy("data_transaksi.id_pelanggan")->first();
-        $temp_pelanggan = $transaksi->select("id_pelanggan")->orderBy("data_transaksi.id_pelanggan")->first();
+            $id_pelanggan = $transaksi->select("data_transaksi.id_pelanggan")->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")->orderBy("data_transaksi.id_pelanggan")->first();
+            $nama_pelanggan = $transaksi->select("nama_pelanggan")->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")->orderBy("data_transaksi.id_pelanggan")->first();
+            $nama_desa = $transaksi->select("nama_desa")->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner")->orderBy("data_transaksi.id_pelanggan")->first();
+            $total = $transaksi->select("total")->orderBy("data_transaksi.id_pelanggan")->first();
+            $tanggal = $transaksi->select("tanggal")->orderBy("data_transaksi.id_pelanggan")->first();
+            $status = $transaksi->select("status")->orderBy("data_transaksi.id_pelanggan")->first();
+            $temp_tanggal = $transaksi->select("tanggal")->orderBy("data_transaksi.id_pelanggan")->first();
+            $temp_pelanggan = $transaksi->select("id_pelanggan")->orderBy("data_transaksi.id_pelanggan")->first();
 
-        $data = [
-            [
-                "id_pelanggan" => $id_pelanggan["id_pelanggan"],
-                "nama_pelanggan" => $nama_pelanggan["nama_pelanggan"],
-                "nama_desa" => $nama_desa["nama_desa"],
-                "total" => $total["total"],
-                "status" => $status["status"],
-                "tanggal" => $tanggal["tanggal"]
-            ]
-        ];
+            $data = [
+                [
+                    "id_pelanggan" => $id_pelanggan["id_pelanggan"],
+                    "nama_pelanggan" => $nama_pelanggan["nama_pelanggan"],
+                    "nama_desa" => $nama_desa["nama_desa"],
+                    "total" => $total["total"],
+                    "status" => $status["status"],
+                    "tanggal" => $tanggal["tanggal"]
+                ]
+            ];
 
-        $total = [];
-        $temp_total = 0;
-        $last_total = 0;
+            $total = [];
+            $temp_total = 0;
+            $last_total = 0;
 
-        $transaksi->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+            $transaksi->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
 
-        foreach ($transaksi->orderBy("data_transaksi.id_pelanggan")->findAll() as $order) {
-            if ($order["id_pelanggan"] == $temp_pelanggan["id_pelanggan"] and $order["tanggal"] == $temp_tanggal["tanggal"]) {
-                $temp_total += $order["total"];
-                $last_total = $temp_total;
-            } else {
-                array_push($total, $temp_total);
-                $temp_total = $order["total"];
-                $temp_pelanggan["id_pelanggan"] = $order["id_pelanggan"];
-                $temp_tanggal["tanggal"] = $order["tanggal"];
-                $last_total = $order["total"];
+            foreach ($transaksi->orderBy("data_transaksi.id_pelanggan")->findAll() as $order) {
+                if ($order["id_pelanggan"] == $temp_pelanggan["id_pelanggan"] and $order["tanggal"] == $temp_tanggal["tanggal"]) {
+                    $temp_total += $order["total"];
+                    $last_total = $temp_total;
+                } else {
+                    array_push($total, $temp_total);
+                    $temp_total = $order["total"];
+                    $temp_pelanggan["id_pelanggan"] = $order["id_pelanggan"];
+                    $temp_tanggal["tanggal"] = $order["tanggal"];
+                    $last_total = $order["total"];
 
+                    $data2 = [
+                        "id_pelanggan" => $order["id_pelanggan"],
+                        "nama_pelanggan" => $order["nama_pelanggan"],
+                        "nama_desa" => $order["nama_desa"],
+                        "total" => $order["total"],
+                        "status" => $order["status"],
+                        "tanggal" => $order["tanggal"]
+                    ];
+                    array_push($data, $data2);
+                }
+            }
+
+            array_push($total, $last_total);
+
+            $data_transaksi = [];
+            foreach ($data as $index => $order) {
                 $data2 = [
                     "id_pelanggan" => $order["id_pelanggan"],
                     "nama_pelanggan" => $order["nama_pelanggan"],
                     "nama_desa" => $order["nama_desa"],
-                    "total" => $order["total"],
+                    "total" => $total[$index],
                     "status" => $order["status"],
                     "tanggal" => $order["tanggal"]
                 ];
-                array_push($data, $data2);
+                array_push($data_transaksi, $data2);
             }
+
+            return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi/transaksi', ["transaksi" => $data_transaksi]);
+        } else {
+            return redirect('/');
         }
-
-        array_push($total, $last_total);
-
-        $data_transaksi = [];
-        foreach ($data as $index => $order) {
-            $data2 = [
-                "id_pelanggan" => $order["id_pelanggan"],
-                "nama_pelanggan" => $order["nama_pelanggan"],
-                "nama_desa" => $order["nama_desa"],
-                "total" => $total[$index],
-                "status" => $order["status"],
-                "tanggal" => $order["tanggal"]
-            ];
-            array_push($data_transaksi, $data2);
-        }
-
-        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi', ["transaksi" => $data_transaksi]);
     }
 
-    public function cards()
-    {
-        return view('cards');
-    }
-    public function modals()
-    {
-        return view('modals');
-    }
-    public function charts()
-    {
-        return view('charts');
-    }
-
-    public function form()
-    {
-        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('forms');
-    }
     public function createForm()
     {
 
@@ -136,12 +123,14 @@ class Transaksi extends BaseController
             "barang" => $barang->findAll(),
             "layanan" => $layanan->findAll()
         ];
-        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/add_transaksi', $data);
+        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi/add_transaksi', $data);
     }
 
     public function create()
     {
         $transaksi = new DataTransaksiModel();
+        $pks = new PerjanjianKerjasamaModel();
+        $pelanggan = new DataPelangganModel();
         $jumlah_barang = $this->request->getPost("jumlah_barang");
         $jumlah_layanan = $this->request->getPost("jumlah_layanan");
 
@@ -175,6 +164,18 @@ class Transaksi extends BaseController
                 $transaksi->insert($data);
             }
         }
+
+        // print_r($data);
+        // die();
+        $nama_desa = $pelanggan->where("id_pelanggan", $data["id_pelanggan"])->first()["nama_desa"];
+        $data_pks = [
+            "id_pks" => uniqid(),
+            "nama_desa" => $nama_desa,
+            "tanggal" => $data["tanggal"],
+            "id_transaksi" => $data["id_transaksi"],
+        ];
+
+        $pks->insert($data_pks);
         return redirect()->to('/transaksi');
     }
 
@@ -253,7 +254,12 @@ class Transaksi extends BaseController
                 }
             }
         }
-        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/detail_transaksi', ["transaksi" => $data]);
+
+        if ($data == NULL) {
+            return redirect()->to("/transaksi");
+        } else {
+            return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi/detail_transaksi', ["transaksi" => $data]);
+        }
     }
 
     public function approve($id, $tanggal)
@@ -303,7 +309,7 @@ class Transaksi extends BaseController
             "layanan" => $layanan->findAll()
         ];
 
-        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/edit_transaksi', $data);
+        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi/edit_transaksi', $data);
     }
     public function edit()
     {
@@ -335,5 +341,14 @@ class Transaksi extends BaseController
 
 
         return redirect()->to('/transaksi/detail/' . $id . '/' . $tanggal);
+    }
+
+    public function delete($id_transaksi, $id_pelanggan, $tanggal)
+    {
+        $transaksi = new DataTransaksiModel();
+
+        $transaksi->delete($id_transaksi);
+
+        return redirect()->to('/transaksi/detail/' . $id_pelanggan . '/' . $tanggal);
     }
 }

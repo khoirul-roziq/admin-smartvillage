@@ -8,6 +8,10 @@ $(document).ready(function () {
     selectTab($(this).attr("id"));
     localStorage.setItem("tab", $(this).attr("id"));
   });
+  $("li>button").click(function () {
+    selectTab($(this).attr("id"));
+    localStorage.setItem("tab", $(this).attr("id"));
+  });
 
   // On load
   const loadedTab = localStorage.getItem("tab");

@@ -3,7 +3,7 @@
     <div class="container px-6 mx-auto grid">
 
       <h4 class="mb-4 my-6 text-lg font-semibold text-gray-600 dark:text-gray-300">
-        Tambah Transaksi
+        Edit Transaksi
       </h4>
 
       <form action="<?= base_url('/transaksi/edit') ?>" id="edit_transaksi" method="POST">
