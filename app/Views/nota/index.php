@@ -55,6 +55,7 @@
         <div class="data">
             <table>
                 <thead>
+                    
                     <tr>
                         <th>No</th>
                         <th>SKV</th>
@@ -95,7 +96,6 @@
                         <?php endif; ?>
                     <?php endforeach; 
                     ?>
-                    
                 </tbody>
             </table>
         </div>

@@ -118,3 +118,9 @@
 .nota main .flor .col-2 div:last-child {
     margin-top: 30px;
 }
+
+.nota .bg-table img {
+    width: 85%;
+    height: 30px;
+    position: absolute;
+}
