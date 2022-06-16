@@ -15,6 +15,7 @@ use CodeIgniter\Config\AutoloadConfig;
  * NOTE: If you use an identical key in $psr4 or $classmap, then
  * the values in this file will overwrite the framework's values.
  */
+
 class Autoload extends AutoloadConfig
 {
     /**
@@ -43,7 +44,11 @@ class Autoload extends AutoloadConfig
     public $psr4 = [
         APP_NAMESPACE => APPPATH, // For custom app namespace
         'Config'      => APPPATH . 'Config',
+        'Dompdf'      => APPPATH . 'ThirdParty/dompdf/src',
+        
     ];
+
+    
 
     /**
      * -------------------------------------------------------------------
@@ -84,4 +89,7 @@ class Autoload extends AutoloadConfig
      * @var array<int, string>
      */
     public $files = [];
+
+    
 }
+
