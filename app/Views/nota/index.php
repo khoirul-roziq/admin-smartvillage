@@ -77,7 +77,7 @@
                             <td><?php echo esc($data["qty"]);  ?></td>
                             <td><?php echo "Rp" . esc(number_format($data["harga_barang"], 2, ',', '.'));?></td>
                             <td><?= "Rp" . esc(number_format($data["harga_barang"] * $data["qty"], 2, ',', '.')); ?></td>
-                            <?php $totalHarga += ($data["harga_barang"] * $data["qty"]);?>
+                            <?php $totalHarga = $totalHarga + ($data["harga_barang"] * $data["qty"]);?>
                             </tr>
                         <?php endif; ?>
                     <?php endforeach; 
@@ -89,8 +89,8 @@
                             <td><?php echo esc($data["nama_layanan"]);?></td>
                             <td>1</td>
                             <td><?php echo "Rp" . esc(number_format($data["harga_layanan"], 2, ',', '.'));?></td>
-                            <td><?= "Rp" . esc(number_format($data["harga_layanan"] * $data["qty"], 2, ',', '.')); ?></td>
-                            <?php $totalHarga += $data["harga_layanan"];?>
+                            <td><?= "Rp" . esc(number_format($data["harga_layanan"], 2, ',', '.')); ?></td>
+                            <?php $totalHarga = $totalHarga + $data["harga_layanan"];?>
                             </tr>
                         <?php endif; ?>
                     <?php endforeach; 
@@ -112,7 +112,7 @@
             <div class="col-2">
                 <div>
                     <p>Total</p>
-                    <p>Rp. <?= $totalHarga; ?></p>
+                    <p><?= "Rp. " . esc(number_format($totalHarga, 2, ',', '.')); ?></p>
                 </div>
                 <div>
                     <p>Hormat Kami,</p>
