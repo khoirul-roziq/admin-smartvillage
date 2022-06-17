@@ -30,7 +30,7 @@
                     foreach ($pelanggan as $index) {
                       // $data2 = $total[$index];
                     ?>
-                      <tr class="text-gray-700 dark:text-gray-400">
+                      <tr class="text-gray-700 dark:text-black">
                         <td class="px-4 py-3">
                           <div class="flex items-center text-sm">
                             <!-- Avatar with inset shadow -->
