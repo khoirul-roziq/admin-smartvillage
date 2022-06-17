@@ -22,7 +22,7 @@
                 $total_penghasilan = 0;
                 $total_pending = 0;
                 $total_denied = 0;
-                foreach ($transaksi as $data) {
+                foreach ($heading as $data) {
                   $total_pelanggan += 1;
                   if ($data["status"] == 1) {
                     $total_penghasilan += $data["total"];
