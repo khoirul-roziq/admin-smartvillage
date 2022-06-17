@@ -99,7 +99,7 @@
                   <?= "Rp" . esc(number_format($data["total"], 2, ',', '.')); ?>
                 </td>
                 <td class="px-4 py-3 text-sm">
-                  <?= esc($data["tanggal"]) ?>
+                  <?= date('d F Y', strtotime(esc($data["tanggal"]))) ?>
                 </td>
                 <td class="px-4 py-3">
                   <div class="flex items-center space-x-4 text-sm">

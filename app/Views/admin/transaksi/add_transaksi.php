@@ -36,7 +36,7 @@
                   <button type="button" data-action="decrement" class=" bg-gray-300 text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:bg-gray-700 hover:bg-gray-400  w-20 rounded-l cursor-pointer outline-none">
                     <span class="m-auto font-thin">−</span>
                   </button>
-                  <input name="qty0" type="number" class="outline-none dark:text-gray-300 dark:bg-gray-700 focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number" value="0"></input>
+                  <input name="qty0" type="number" class="outline-none dark:text-gray-300 dark:bg-gray-700 focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" name="custom-input-number" value="1"></input>
                   <button type="button" data-action="increment" class="bg-gray-300 dark:text-gray-300 dark:bg-gray-700 text-gray-600 hover:text-gray-700 hover:bg-gray-400 w-20 rounded-r cursor-pointer">
                     <span class="m-auto font-thin">+</span>
                   </button>

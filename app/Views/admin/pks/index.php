@@ -37,7 +37,7 @@
                                     <?= $index["nama_kades"] ?>
                                 </td>
                                 <td class="px-4 py-3 text-sm">
-                                    <?= $index["tanggal"] ?>
+                                    <?= date('d F Y', strtotime(esc($index["tanggal"]))) ?>
                                 </td>
 
                                 <td class="px-4 py-3">

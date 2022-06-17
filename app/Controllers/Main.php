@@ -2,15 +2,21 @@
 
 namespace App\Controllers;
 
-
 use App\Models\UserModel;
+use App\Models\DataBarangModel;
+use App\Models\DataTransaksiModel;
+use App\Controllers\BaseController;
+use App\Models\DataLayananModel;
 
 class Main extends BaseController
 {
     public function index()
     {
         if ($this->session->has('username')) {
-            return view('templates/header', ["title" => "Dashboard"]) . view('templates/menu') . view('admin/dashboard/index');
+            $transaksi = new DataTransaksiModel();
+            $barang = new DataBarangModel();
+            $layanan = new DataLayananModel();
+            return view('templates/header', ["title" => "Dashboard"]) . view('templates/menu') . view('admin/dashboard/index', ["transaksi" => $transaksi->findAll(), "barang" => $barang->findALL(), "layanan" => $layanan->findAll()]);
         } else {
             return view('templates/header', ["title" => "Login - Admin"]) . view('auth/login');
         }

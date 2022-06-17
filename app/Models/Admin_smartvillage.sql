@@ -18,21 +18,6 @@ DROP DATABASE IF EXISTS `admin_smartvillage`;
 CREATE DATABASE IF NOT EXISTS `admin_smartvillage` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `admin_smartvillage`;
 
--- Dumping structure for table admin_smartvillage.admins
-CREATE TABLE IF NOT EXISTS `admins` (
-  `id` varchar(50) COLLATE utf8_bin NOT NULL,
-  `username` varchar(50) COLLATE utf8_bin NOT NULL,
-  `password` varchar(255) COLLATE utf8_bin NOT NULL,
-  `nama` mediumtext COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- Dumping data for table admin_smartvillage.admins: ~1 rows (approximately)
-DELETE FROM `admins`;
-/*!40000 ALTER TABLE `admins` DISABLE KEYS */;
-INSERT INTO `admins` (`id`, `username`, `password`, `nama`) VALUES
-	('1', 'admin', '$2a$12$PMNuf2cbjHMrrvo27U/rO.Bq75DF33X2ll6k2Pm4sxnRd6Eef7HJa', 'SmartVillage');
-/*!40000 ALTER TABLE `admins` ENABLE KEYS */;
-
 -- Dumping structure for table admin_smartvillage.data_barang
 CREATE TABLE IF NOT EXISTS `data_barang` (
   `kode_barang` char(5) COLLATE utf8_bin NOT NULL,
@@ -46,7 +31,8 @@ DELETE FROM `data_barang`;
 /*!40000 ALTER TABLE `data_barang` DISABLE KEYS */;
 INSERT INTO `data_barang` (`kode_barang`, `nama_barang`, `harga_barang`) VALUES
 	('1', 'ASUS ROG', 30000000),
-	('2', 'RTX 3000 Series', 5000000);
+	('2', 'RTX 3000 Series', 5000000),
+	('B001', 'Aqua', 700);
 /*!40000 ALTER TABLE `data_barang` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.data_layanan
@@ -103,18 +89,15 @@ CREATE TABLE IF NOT EXISTS `data_transaksi` (
   CONSTRAINT `data_transaksi_ibfk_2` FOREIGN KEY (`id_pelanggan`) REFERENCES `data_pelanggan` (`id_pelanggan`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.data_transaksi: ~8 rows (approximately)
+-- Dumping data for table admin_smartvillage.data_transaksi: ~5 rows (approximately)
 DELETE FROM `data_transaksi`;
 /*!40000 ALTER TABLE `data_transaksi` DISABLE KEYS */;
 INSERT INTO `data_transaksi` (`id_transaksi`, `id_pelanggan`, `kode_barang`, `qty`, `kode_layanan`, `total`, `tanggal`, `status`) VALUES
-	('62a4a3ae21f87', '2', '2', 3, NULL, 15000000, '2022-06-11', 2),
-	('62a4a3e55ef85', '1', NULL, 0, 'L02', 3000000, '2022-06-11', 2),
-	('62a4a42ab7c63', '1', '1', 1, 'L02', 33000000, '2022-06-11', 2),
-	('62a4a42aba848', '1', '2', 1, NULL, 5000000, '2022-06-11', 2),
-	('62a6659c80786', '2', NULL, 0, 'L02', 3000000, '2022-06-11', 2),
-	('62a66767a147d', '1', NULL, 0, 'L02', 3000000, '2022-06-13', 2),
-	('62a6678a99021', '2', NULL, 0, 'L02', 3000000, '2022-06-13', 2),
-	('62a6686396e34', '1', '1', 1, NULL, 30000000, '2022-06-13', 2);
+	('62a4a3ae21f87', '2', '2', 3, NULL, 15000000, '2022-06-11', 0),
+	('62a4a3e55ef85', '1', '2', 2, 'L02', 13000000, '2022-06-11', 1),
+	('62a4a42ab7c63', '1', '1', 1, 'L01', 40000000, '2022-06-11', 1),
+	('62a6659c80786', '2', NULL, 0, 'L02', 3000000, '2022-06-11', 0),
+	('62abedc40d60b', '1', 'B001', 3, NULL, 2100, '2022-06-17', 1);
 /*!40000 ALTER TABLE `data_transaksi` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.perjanjian_kerjasama
@@ -122,16 +105,18 @@ CREATE TABLE IF NOT EXISTS `perjanjian_kerjasama` (
   `id_pks` varchar(64) COLLATE utf8_bin NOT NULL,
   `nama_desa` varchar(30) COLLATE utf8_bin NOT NULL,
   `nama_kades` mediumtext COLLATE utf8_bin NOT NULL,
-  `tgl` date NOT NULL,
-  `id_transaksi` varchar(64) COLLATE utf8_bin NOT NULL,
+  `tanggal` date NOT NULL,
+  `id_transaksi` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id_pks`),
   KEY `id_transaksi` (`id_transaksi`),
   CONSTRAINT `perjanjian_kerjasama_ibfk_1` FOREIGN KEY (`id_transaksi`) REFERENCES `data_transaksi` (`id_transaksi`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.perjanjian_kerjasama: ~0 rows (approximately)
+-- Dumping data for table admin_smartvillage.perjanjian_kerjasama: ~1 rows (approximately)
 DELETE FROM `perjanjian_kerjasama`;
 /*!40000 ALTER TABLE `perjanjian_kerjasama` DISABLE KEYS */;
+INSERT INTO `perjanjian_kerjasama` (`id_pks`, `nama_desa`, `nama_kades`, `tanggal`, `id_transaksi`) VALUES
+	('62abedc41ae45', 'Pringsewu', '', '2022-06-17', '62abedc40d60b');
 /*!40000 ALTER TABLE `perjanjian_kerjasama` ENABLE KEYS */;
 
 -- Dumping structure for table admin_smartvillage.users
@@ -154,7 +139,7 @@ DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id_user`, `username`, `password`, `nama_lengkap`, `jabatan`, `role_id`, `email`, `no_telp`, `alamat`) VALUES
 	('1', 'ahmadsyafar', '$2a$12$PMNuf2cbjHMrrvo27U/rO.Bq75DF33X2ll6k2Pm4sxnRd6Eef7HJa', 'Ahmad Syafarudin', 0, 0, 'ahmad@magang.com', '0895604395176', 'Pringsewu'),
-	('62a19deb7cc67', 'admin', '$2y$10$yYHZ72tNP2lDqbo.7Yjeeu1eFgWCnD1RVokYy8YrTrQeAu3wShn5q', '', 0, 2, '', '', '');
+	('62a19deb7cc67', 'admin', '$2a$12$PMNuf2cbjHMrrvo27U/rO.Bq75DF33X2ll6k2Pm4sxnRd6Eef7HJa', '', 0, 2, '', '', '');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -61,7 +61,7 @@
                     </div>
                     <tr>
                         <th>No</th>
-                        <th>SKV</th>
+                        <th>SKU</th>
                         <th>DESCRIPTION</th>
                         <th>QTY</th>
                         <th>Price</th>
