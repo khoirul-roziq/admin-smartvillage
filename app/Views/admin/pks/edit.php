@@ -11,7 +11,7 @@
                     <span>Data yang anda masukan tidak valid!</span>
                 </div>
             <?php endif; ?>
-            <form action="<?= base_url("pks/update/" . $pks['id_pks']); ?>" id="add_layanan" method="POST">
+            <form action="<?= base_url("pks/update/" . $pks['id_pks'] . '/' . $pks['nama_desa'] . '/' . $pks['tanggal']); ?>" id="edit_pks" method="POST">
                 <?= csrf_field() ?>
                 <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
                     <label class="block text-sm">

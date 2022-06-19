@@ -9,10 +9,14 @@ class RegistrationController extends BaseController
 {
     public function index()
     {
-        $data = [
-            'validation' => \Config\Services::validation()
-        ];
-        return view('auth/registration', $data);
+        if ($this->session->has('username') && $this->session->get('role_id') == 321) {
+            $data = [
+                'validation' => \Config\Services::validation()
+            ];
+            return view('templates/header', ["title" => "Admin"]) . view('templates/menu') . view('auth/create', $data);
+        } else {
+            return redirect('/');
+        }
     }
 
     public function store()
@@ -41,7 +45,7 @@ class RegistrationController extends BaseController
         ];
 
         $db->table('users')->insert($data);
-        session()->setFlashdata('massage', 'Congratulation! Your account has been created. Please login now!');
-        return redirect('/');
+        session()->setFlashdata('massage', 'Admin Berhasil Ditambahkan');
+        return redirect()->to('/registration');
     }
 }

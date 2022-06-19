@@ -13,11 +13,51 @@ class PksController extends BaseController
         if ($this->session->has('username')) {
 
             $pksModel = new PerjanjianKerjasamaModel();
-            $pks = $pksModel->findAll();
+            $id_pks = $pksModel->select("id_pks")->orderBy("nama_desa")->first();
+            $nama_kades = $pksModel->select("nama_kades")->orderBy("nama_desa")->first();
+            $nama_desa = $pksModel->select("nama_desa")->orderBy("nama_desa")->first();
+            $tanggal = $pksModel->select("tanggal")->orderBy("nama_desa")->first();
+            $id_transaksi = $pksModel->select("id_transaksi")->orderBy("nama_desa")->first();
+            $temp_tanggal = $pksModel->select("tanggal")->orderBy("nama_desa")->first();
+            $temp_nama_desa = $pksModel->select("nama_desa")->orderBy("nama_desa")->first();
+
+            if ($id_pks != NULL) {
+
+
+                $data = [
+                    [
+                        "id_pks" => $id_pks["id_pks"],
+                        "nama_kades" => $nama_kades["nama_kades"],
+                        "nama_desa" => $nama_desa["nama_desa"],
+                        "id_transaksi" => $id_transaksi["id_transaksi"],
+                        "tanggal" => $tanggal["tanggal"]
+                    ]
+                ];
+
+                foreach ($pksModel->orderBy("nama_desa")->findAll() as $order) {
+                    if ($order["nama_desa"] == $temp_nama_desa["nama_desa"] and $order["tanggal"] == $temp_tanggal["tanggal"]) {
+                        continue;
+                    } else {
+                        $temp_nama_desa["nama_desa"] = $order["nama_desa"];
+                        $temp_tanggal["tanggal"] = $order["tanggal"];
+
+                        $data2 = [
+                            "id_pks" => $order["id_pks"],
+                            "nama_kades" => $order["nama_kades"],
+                            "nama_desa" => $order["nama_desa"],
+                            "id_transaksi" => $order["id_transaksi"],
+                            "tanggal" => $order["tanggal"]
+                        ];
+                        array_push($data, $data2);
+                    }
+                }
+            } else {
+                $data = $pksModel->findAll();
+            }
 
             $data = [
                 'title' => 'Perjanjian Kerjasama',
-                'pks' => $pks
+                'pks' => $data
             ];
 
             return view('templates/header', ["title" => "PKS"]) . view('templates/menu') . view('admin/pks/index', $data);
@@ -92,7 +132,7 @@ class PksController extends BaseController
         return view('templates/header', ["title" => "PKS"]) . view('templates/menu') . view("admin/pks/edit", $data);
     }
 
-    public function update($id)
+    public function update($id, $nama_desa, $tanggal)
     {
         $pksModel = new PerjanjianKerjasamaModel();
 
@@ -122,8 +162,7 @@ class PksController extends BaseController
             return redirect()->to("barang/$id/edit")->withInput()->with('validation', $validation);
         }
 
-        $pksModel->save([
-            'id_pks' => $id,
+        $pksModel->where(["nama_desa" => $nama_desa, "tanggal" => $tanggal])->save([
             'nama_desa' => $this->request->getPost("namaDesa"),
             'nama_kades'  => $this->request->getPost("namaKades"),
             'tanggal' => $this->request->getPost("tanggalPks"),
@@ -133,10 +172,10 @@ class PksController extends BaseController
         return redirect('pks');
     }
 
-    public function delete($id)
+    public function delete($nama_desa, $tanggal)
     {
         $pksModel = new PerjanjianKerjasamaModel();
-        $pksModel->delete($id);
+        $pksModel->where(["nama_desa" => $nama_desa, "tanggal" => $tanggal])->delete();
         session()->setFlashdata('massage', 'Perjanjian Kerjasama Berhasil Dihapus!');
         return redirect('pks');
     }

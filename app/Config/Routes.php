@@ -48,9 +48,13 @@ $routes->get('/transaksi/detail/(:any)', 'Transaksi::detail/$1');
 $routes->get('/transaksi/approve/(:any)', 'Transaksi::approve/$1');
 $routes->get('/transaksi/pending/(:any)', 'Transaksi::pending/$1');
 $routes->get('/transaksi/cancel/(:any)', 'Transaksi::cancel/$1');
-$routes->get('/transaksi/edit/(:segment)', 'Transaksi::editForm/$1');
-$routes->add('/transaksi/edit', 'Transaksi::edit');
-$routes->get('/transaksi/delete/(:any)', 'Transaksi::delete/$1');
+$routes->get('/transaksi/edit/barang/(:segment)', 'Transaksi::editBarangForm/$1');
+$routes->get('/transaksi/edit/layanan/(:segment)', 'Transaksi::editLayananForm/$1');
+$routes->add('/transaksi/edit-barang', 'Transaksi::editBarang');
+$routes->add('/transaksi/edit-layanan', 'Transaksi::editLayanan');
+$routes->get('/transaksi/delete/barang/(:any)', 'Transaksi::deleteBarang/$1');
+$routes->get('/transaksi/delete/layanan/(:any)', 'Transaksi::deleteLayanan/$1');
+
 
 $routes->get('pelanggan', 'PelangganController::index');
 $routes->get('pelanggan/create', 'PelangganController::create');
@@ -80,8 +84,8 @@ $routes->get('pks', 'PksController::index');
 $routes->get('pks/create', 'PksController::create');
 $routes->post('pks/store', 'PksController::store');
 $routes->get('pks/(:segment)/edit', 'PksController::edit/$1');
-$routes->get('pks/(:segment)/delete', 'PksController::delete/$1');
-$routes->post('pks/update/(:segment)', 'PksController::update/$1');
+$routes->get('pks/(:any)/delete', 'PksController::delete/$1');
+$routes->post('pks/update/(:any)', 'PksController::update/$1');
 
 $routes->get('registration', 'RegistrationController::index');
 $routes->post('registration/store', 'RegistrationController::store');
