@@ -11,7 +11,7 @@ class User extends BaseController
 {
     public function index()
     {
-        if ($this->session->has('username')) {
+        if ($this->session->has('username') && $this->session->get('role_id') == 321) {
 
             $userModel = new UserModel();
             $user = $userModel->findAll();
