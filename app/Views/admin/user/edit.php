@@ -14,13 +14,8 @@
             <form action="<?= base_url("user/update/" . $user['id_user']); ?>" id="add_layanan" method="POST">
                 <?= csrf_field() ?>
                 <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                    <label class="block text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">Username</span>
-                        <input id="username" name="username" type="text" value="<?= $user['username'] ?>" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Masukkan Username" />
-                        <small style="color: red;"><?= $validation->getError('username'); ?></small>
-                    </label>
 
-                    <label class="block mt-4 text-sm">
+                    <label class="block text-sm">
                         <span class="text-gray-700 dark:text-gray-400">Nama Lengkap</span>
                         <input id="nama" name="nama" type="text" value="<?= $user['nama_lengkap'] ?>" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Masukkan Nama Lengkap" />
                         <small style="color: red;"><?= $validation->getError('nama'); ?></small>
