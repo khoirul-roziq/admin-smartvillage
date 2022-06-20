@@ -62,6 +62,14 @@
                     Master Pelanggan
                   </a>
                 </li>
+                <?php $session = \Config\Services::session();
+                if ($session->get('role_id') == 321) : ?>
+                  <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                    <a class="w-full" href="<?= base_url('/user') ?>">
+                      Master User
+                    </a>
+                  </li>
+                <?php endif; ?>
               </ul>
             </template>
           </li>

@@ -64,6 +64,11 @@ $routes->get('pelanggan/(:segment)/edit', 'PelangganController::edit/$1');
 $routes->get('pelanggan/(:segment)/delete', 'PelangganController::delete/$1');
 $routes->post('pelanggan/update/(:segment)', 'PelangganController::update/$1');
 
+$routes->get('user', 'User::index');
+$routes->get('user/(:segment)/edit', 'user::edit/$1');
+$routes->get('user/(:segment)/delete', 'user::delete/$1');
+$routes->post('user/update/(:segment)', 'user::update/$1');
+
 // Route for Barang
 $routes->get('barang', 'BarangController::index');
 $routes->get('barang/create', 'BarangController::create');

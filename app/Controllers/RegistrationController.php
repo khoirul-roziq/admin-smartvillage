@@ -24,6 +24,8 @@ class RegistrationController extends BaseController
         $db = \Config\Database::connect();
 
         if (!$this->validate([
+            'nama' => 'required|min_length[3]',
+            'email' => 'required|valid_email',
             'username' => 'required|is_unique[users.username]',
             'password1' => [
                 'rules' => 'required|trim|min_length[8]|matches[password2]',
@@ -40,6 +42,8 @@ class RegistrationController extends BaseController
         $data = [
             'id_user' => uniqid(),
             'username' => $this->request->getPost("username"),
+            'nama_lengkap' => $this->request->getPost("nama"),
+            'email' => $this->request->getPost("email"),
             'password'  => password_hash($this->request->getPost("password1"), PASSWORD_DEFAULT),
             'role_id' => '2',
         ];
