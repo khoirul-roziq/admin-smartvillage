@@ -54,6 +54,7 @@ $routes->add('/transaksi/edit-barang', 'Transaksi::editBarang');
 $routes->add('/transaksi/edit-layanan', 'Transaksi::editLayanan');
 $routes->get('/transaksi/delete/barang/(:any)', 'Transaksi::deleteBarang/$1');
 $routes->get('/transaksi/delete/layanan/(:any)', 'Transaksi::deleteLayanan/$1');
+$routes->get('/transaksi/delete/(:any)', 'Transaksi::deleteTransaksi/$1');
 
 
 $routes->get('pelanggan', 'PelangganController::index');

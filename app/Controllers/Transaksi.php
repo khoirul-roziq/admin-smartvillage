@@ -20,16 +20,19 @@ class Transaksi extends BaseController
         $transaksi = new DataTransaksiModel();
 
         if ($this->session->has('username')) {
-            $transaksi->join("layanan_order", "layanan_order.id_transaksi= data_transaksi.id_transaksi", "left")
-                ->join("barang_order", "barang_order.id_transaksi= data_transaksi.id_transaksi", "left");
+            $id_transaksi = $transaksi->select("data_transaksi.id_transaksi")->orderBy("id_transaksi")->findAll();
+            $transaksi->join("layanan_order", "layanan_order.id_transaksi=data_transaksi.id_transaksi", "left")
+                ->join("barang_order", "barang_order.id_transaksi=data_transaksi.id_transaksi", "left");
 
-            foreach ($transaksi->findAll() as $order) {
-                if ($order["kode_barang"] == NULL) {
-                    $transaksi->update(["id_transaksi" => $order["id_transaksi"]], ["total" => $order["harga_layanan"]]);
-                } else if ($order["kode_layanan"] == NULL) {
-                    $transaksi->update(["id_transaksi" => $order["id_transaksi"]], ["total" => $order["harga_barang"] * $order["qty"]]);
+            foreach ($transaksi->orderBy("data_transaksi.id_transaksi")->findAll() as $index => $order) {
+                if ($order["kode_barang"] == NULL && $order["kode_layanan"] != NULL) {
+                    $transaksi->update(["id_transaksi" => $id_transaksi[$index]["id_transaksi"]], ["total" => $order["harga_layanan"]]);
+                } else if ($order["kode_layanan"] == NULL && $order["kode_barang"] != NULL) {
+                    $transaksi->update(["id_transaksi" => $id_transaksi[$index]["id_transaksi"]], ["total" => $order["harga_barang"] * $order["qty"]]);
+                } else if ($order["kode_barang"] == NULL && $order["kode_layanan"] == NULL) {
+                    $transaksi->update(["id_transaksi" => $id_transaksi[$index]["id_transaksi"]], ["total" => 0]);
                 } else {
-                    $transaksi->update(["id_transaksi" => $order["id_transaksi"]], ["total" => $order["harga_barang"] * $order["qty"] + $order["harga_layanan"]]);
+                    $transaksi->update(["id_transaksi" => $id_transaksi[$index]["id_transaksi"]], ["total" => $order["harga_barang"] * $order["qty"] + $order["harga_layanan"]]);
                 }
             }
 
@@ -137,11 +140,15 @@ class Transaksi extends BaseController
         $date = new DateTime("now");
         if ($jumlah_barang >= $jumlah_layanan) {
             for ($i = 0; $i < $jumlah_barang; $i++) {
-                $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first()['status'];
-                if ($temp_status == 1) {
-                    $status = 1;
-                } else if ($temp_status == 0) {
-                    $status = 0;
+                $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first();
+                if ($temp_status != NULL) {
+                    if ($temp_status["status"] == 1) {
+                        $status = 1;
+                    } else if ($temp_status["status"] == 0) {
+                        $status = 0;
+                    } else {
+                        $status = 2;
+                    }
                 } else {
                     $status = 2;
                 }
@@ -163,16 +170,17 @@ class Transaksi extends BaseController
                     $harga_barang = $barang->select('harga_barang')
                         ->where("kode_barang", $this->request->getPost("barang_order" . $i))
                         ->first()['harga_barang'];
+                    $order = [
+                        "id_barang" => uniqid(),
+                        "kode_barang" => $this->request->getPost("barang_order" . $i),
+                        "nama_barang" => $nama_barang,
+                        "harga_barang" => $harga_barang,
+                        "qty" => $this->request->getPost("qty" . $i),
+                        "id_transaksi" => $data['id_transaksi']
+                    ];
+
+                    $barang_order->insert($order);
                 }
-                $order = [
-                    "id_barang" => uniqid(),
-                    "kode_barang" => $this->request->getPost("barang_order" . $i),
-                    "nama_barang" => $nama_barang,
-                    "harga_barang" => $harga_barang,
-                    "qty" => $this->request->getPost("qty" . $i),
-                    "id_transaksi" => $data['id_transaksi']
-                ];
-                $barang_order->insert($order);
 
                 $nama_layanan = NULL;
                 $harga_layanan = NULL;
@@ -183,15 +191,15 @@ class Transaksi extends BaseController
                     $harga_layanan = $layanan->select('harga_layanan')
                         ->where("kode_layanan", $this->request->getPost("layanan_order" . $i))
                         ->first()['harga_layanan'];
+                    $order = [
+                        "id_layanan" => uniqid(),
+                        "kode_layanan" => $this->request->getPost("layanan_order" . $i),
+                        "nama_layanan" => $nama_layanan,
+                        "harga_layanan" => $harga_layanan,
+                        "id_transaksi" => $data['id_transaksi']
+                    ];
+                    $layanan_order->insert($order);
                 }
-                $order = [
-                    "id_layanan" => uniqid(),
-                    "kode_layanan" => $this->request->getPost("layanan_order" . $i),
-                    "nama_layanan" => $nama_layanan,
-                    "harga_layanan" => $harga_layanan,
-                    "id_transaksi" => $data['id_transaksi']
-                ];
-                $layanan_order->insert($order);
 
                 $nama_desa = $pelanggan->where("id_pelanggan", $data["id_pelanggan"])->first()["nama_desa"];
                 $data_pks = [
@@ -205,14 +213,19 @@ class Transaksi extends BaseController
             }
         } else {
             for ($i = 0; $i < $jumlah_layanan; $i++) {
-                $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first()['status'];
-                if ($temp_status == 1) {
-                    $status = 1;
-                } else if ($temp_status == 0) {
-                    $status = 0;
+                $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first();
+                if ($temp_status != NULL) {
+                    if ($temp_status["status"] == 1) {
+                        $status = 1;
+                    } else if ($temp_status["status"] == 0) {
+                        $status = 0;
+                    } else {
+                        $status = 2;
+                    }
                 } else {
                     $status = 2;
                 }
+
                 $data = [
                     "id_transaksi" => uniqid(),
                     "id_pelanggan" => $this->request->getPost("pelanggan"),
@@ -230,16 +243,16 @@ class Transaksi extends BaseController
                     $harga_barang = $barang->select('harga_barang')
                         ->where("kode_barang", $this->request->getPost("barang_order" . $i))
                         ->first()['harga_barang'];
+                    $order = [
+                        "id_barang" => uniqid(),
+                        "kode_barang" => $this->request->getPost("barang_order" . $i),
+                        "nama_barang" => $nama_barang,
+                        "harga_barang" => $harga_barang,
+                        "qty" => $this->request->getPost("qty" . $i),
+                        "id_transaksi" => $data['id_transaksi']
+                    ];
+                    $barang_order->insert($order);
                 }
-                $order = [
-                    "id_barang" => uniqid(),
-                    "kode_barang" => $this->request->getPost("barang_order" . $i),
-                    "nama_barang" => $nama_barang,
-                    "harga_barang" => $harga_barang,
-                    "qty" => $this->request->getPost("qty" . $i),
-                    "id_transaksi" => $data['id_transaksi']
-                ];
-                $barang_order->insert($order);
 
                 $nama_layanan = NULL;
                 $harga_layanan = NULL;
@@ -250,15 +263,15 @@ class Transaksi extends BaseController
                     $harga_layanan = $layanan->select('harga_layanan')
                         ->where("kode_layanan", $this->request->getPost("layanan_order" . $i))
                         ->first()['harga_layanan'];
+                    $order = [
+                        "id_layanan" => uniqid(),
+                        "kode_layanan" => $this->request->getPost("layanan_order" . $i),
+                        "nama_layanan" => $nama_layanan,
+                        "harga_layanan" => $harga_layanan,
+                        "id_transaksi" => $data['id_transaksi']
+                    ];
+                    $layanan_order->insert($order);
                 }
-                $order = [
-                    "id_layanan" => uniqid(),
-                    "kode_layanan" => $this->request->getPost("layanan_order" . $i),
-                    "nama_layanan" => $nama_layanan,
-                    "harga_layanan" => $harga_layanan,
-                    "id_transaksi" => $data['id_transaksi']
-                ];
-                $layanan_order->insert($order);
 
                 $nama_desa = $pelanggan->where("id_pelanggan", $data["id_pelanggan"])->first()["nama_desa"];
                 $data_pks = [
@@ -278,15 +291,17 @@ class Transaksi extends BaseController
     public function detail($id, $tanggal)
     {
         $transaksi = new DataTransaksiModel();
-        $id_transaksi = $transaksi->select("data_transaksi.id_transaksi")->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll();
+        $id_transaksi = $transaksi->select("data_transaksi.id_transaksi")->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->orderBy("data_transaksi.id_transaksi")->findAll();
         $transaksi->join("layanan_order", "layanan_order.id_transaksi = data_transaksi.id_transaksi", "left")
             ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "left")
             ->join("barang_order", "barang_order.id_transaksi = data_transaksi.id_transaksi", "left");
 
         $data = [];
-        foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $index => $order) {
+        foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->orderBy("data_transaksi.id_transaksi")->findAll() as $index => $order) {
             if ($order["kode_barang"] == NULL) {
                 $data2 = [
+                    "id_barang" => $order["id_barang"],
+                    "id_layanan" => $order["id_layanan"],
                     "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
                     "id_pelanggan" => $order["id_pelanggan"],
                     "nama_pelanggan" => $order["nama_pelanggan"],
@@ -304,6 +319,8 @@ class Transaksi extends BaseController
                 array_push($data, $data2);
             } else if ($order["kode_layanan"] == NULL) {
                 $data2 = [
+                    "id_barang" => $order["id_barang"],
+                    "id_layanan" => $order["id_layanan"],
                     "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
                     "id_pelanggan" => $order["id_pelanggan"],
                     "nama_pelanggan" => $order["nama_pelanggan"],
@@ -321,6 +338,8 @@ class Transaksi extends BaseController
                 array_push($data, $data2);
             } else {
                 $data2 = [
+                    "id_barang" => $order["id_barang"],
+                    "id_layanan" => $order["id_layanan"],
                     "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
                     "id_pelanggan" => $order["id_pelanggan"],
                     "nama_pelanggan" => $order["nama_pelanggan"],
@@ -489,34 +508,23 @@ class Transaksi extends BaseController
         return redirect()->to('/transaksi/detail/' . $id . '/' . $tanggal);
     }
 
-    public function deleteBarang($id_transaksi, $id_pelanggan, $tanggal)
+    public function deleteBarang($id_barang, $id_pelanggan, $tanggal)
     {
-        $transaksi = new DataTransaksiModel();
         $barang_order = new BarangOrderModel();
-
-        $barang_order->where("id_transaksi", $id_transaksi)->delete();
-        $data = $transaksi->join("layanan_order", "layanan_order.id_transaksi= data_transaksi.id_transaksi", "left")
-            ->join("barang_order", "barang_order.id_transaksi= data_transaksi.id_transaksi", "left")->where("data_transaksi.id_transaksi", $id_transaksi)->first();
-        if ($data["kode_barang"] == NULL && $data["kode_layanan"] == NULL) {
-            $transaksi->delete($id_transaksi);
-        }
-
+        $barang_order->delete($id_barang);
         return redirect()->to('/transaksi/detail/' . $id_pelanggan . '/' . $tanggal);
     }
 
-    public function deleteLayanan($id_transaksi, $id_pelanggan, $tanggal)
+    public function deleteLayanan($id_layanan, $id_pelanggan, $tanggal)
+    {
+        $layanan_order = new LayananOrderModel();
+        $layanan_order->delete($id_layanan);
+        return redirect()->to('/transaksi/detail/' . $id_pelanggan . '/' . $tanggal);
+    }
+    public function deleteTransaksi($id_pelanggan, $tanggal)
     {
         $transaksi = new DataTransaksiModel();
-        $layanan_order = new LayananOrderModel();
-
-
-        $layanan_order->where("id_transaksi", $id_transaksi)->delete();
-        $data = $transaksi->join("barang_order", "barang_order.id_transaksi= data_transaksi.id_transaksi", "left")
-            ->join("layanan_order", "layanan_order.id_transaksi= data_transaksi.id_transaksi", "left")->where("data_transaksi.id_transaksi", $id_transaksi)->first();
-        if ($data["kode_barang"] == NULL && $data["kode_layanan"] == NULL) {
-            $transaksi->delete($id_transaksi);
-        }
-
+        $transaksi->where(["id_pelanggan" => $id_pelanggan, "tanggal" => $tanggal])->delete();
         return redirect()->to('/transaksi/detail/' . $id_pelanggan . '/' . $tanggal);
     }
 }
