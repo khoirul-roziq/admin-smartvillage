@@ -37,9 +37,12 @@ $routes->set404Override();
 // route since we don't have to scan directories.
 $routes->get('/', 'Main::index');
 $routes->post('/login', 'Main::login');
+$routes->get('/forgot', 'Main::forgot');
 $routes->post('/username', 'Main::checkUsername');
 $routes->post('/password', 'Main::checkPassword');
+$routes->post('/email', 'Main::checkEmail');
 $routes->get('/logout', 'Main::logout');
+$routes->post('/update', 'Main::update');
 
 $routes->get('/transaksi', 'Transaksi::index');
 $routes->get('/transaksi/create', 'Transaksi::createForm');

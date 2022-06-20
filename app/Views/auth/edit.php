@@ -9,14 +9,14 @@
         <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
           <div class="w-full">
             <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
-              Login
+              Edit Password
             </h1>
             <?php if (session()->getFlashdata('massage')) : ?>
               <div class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center transition-colors duration-150 border border-transparent rounded-lg" style="color: teal; background-color:aquamarine">
                 <span><?= session()->getFlashdata('massage'); ?></span>
               </div>
             <?php endif; ?>
-            <form action="<?= base_url('/login') ?>" method="POST" id="login">
+            <form action="<?= base_url('/update') ?>" method="POST" id="login">
               <input type="hidden" class="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
 
               <label class="block text-sm">
@@ -26,7 +26,13 @@
 
               <div class="flex-auto">
                 <label class="block mt-4 text-sm">
-                  <span class="text-gray-700 dark:text-gray-400">Password</span>
+                  <span class="text-gray-700 dark:text-gray-400">Email</span>
+                  <input name="email" id="email" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Enter Email" type="email" />
+              </div>
+
+              <div class="flex-auto">
+                <label class="block mt-4 text-sm">
+                  <span class="text-gray-700 dark:text-gray-400">New Password</span>
                   <div class="relative w-full">
                     <div class="absolute right-0 flex items-center px-2">
                       <i style="margin-top: 7px;" class="bi-eye-slash bi-aspect-ratio" id="togglePassword"></i>
@@ -34,10 +40,21 @@
                     <input name="password" id="password" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Enter Password" type="password" />
                   </div>
               </div>
+
+              <div class="flex-auto">
+                <label class="block mt-4 text-sm">
+                  <span class="text-gray-700 dark:text-gray-400">Confirm Password</span>
+                  <div class="relative w-full">
+                    <div class="absolute right-0 flex items-center px-2">
+                      <i style="margin-top: 7px;" class="bi-eye-slash bi-aspect-ratio" id="togglePassword2"></i>
+                    </div>
+                    <input name="password2" id="password2" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Repeat Password" type="password" />
+                  </div>
+              </div>
               </label>
 
               <!-- You should use a button here, as the anchor is only used for the example  -->
-              <input id="login-button" type="submit" value="Login" class=" block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" />
+              <input id="login-button" type="submit" value="Submit" class=" block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" />
             </form>
 
             <hr class="my-8" />
@@ -56,8 +73,8 @@
             </button> -->
 
             <p class="mt-4">
-              <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" href="<?= base_url('/forgot') ?>">
-                Forgot your password?
+              <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" href="<?= base_url('/') ?>">
+                Login
               </a>
             </p>
             <!-- <p class="mt-1">
@@ -79,6 +96,18 @@
       // toggle the type attribute
       const type = password.getAttribute("type") === "password" ? "text" : "password";
       password.setAttribute("type", type);
+
+      // toggle the icon
+      this.classList.toggle("bi-eye");
+    });
+
+    const togglePassword2 = document.querySelector("#togglePassword2");
+    const password2 = document.querySelector("#password2");
+
+    togglePassword2.addEventListener("click", function() {
+      // toggle the type attribute
+      const type = password2.getAttribute("type") === "password" ? "text" : "password";
+      password2.setAttribute("type", type);
 
       // toggle the icon
       this.classList.toggle("bi-eye");
@@ -116,18 +145,18 @@
         return res;
       }, "");
 
-      $.validator.addMethod("checkPassword", function(value, element) {
+      $.validator.addMethod("checkEmail", function(value, element) {
         let res = false;
         $.ajax({
-          url: "<?= base_url('/password') ?>",
+          url: "<?= base_url('/email') ?>",
           type: "post",
           async: false,
           data: {
             username: function() {
               return $("#username").val();
             },
-            password: function() {
-              return $("#password").val();
+            email: function() {
+              return $("#email").val();
             },
             [csrfName]: csrfHash
           },
@@ -152,9 +181,18 @@
             required: true,
             checkUsername: true
           },
+          email: {
+            required: true,
+            checkEmail: true
+          },
           password: {
             required: true,
-            checkPassword: true
+            minlength: 8,
+          },
+          password2: {
+            required: true,
+            minlength: 8,
+            equalTo: "#password"
           }
         },
         messages: {
@@ -162,9 +200,18 @@
             required: "Please Enter Your Username",
             checkUsername: "Wrong Username"
           },
+          email: {
+            required: "Please Enter Your Email",
+            checkEmail: "Wrong Email"
+          },
           password: {
             required: "Please Enter Your Password",
-            checkPassword: "Wrong Password"
+            minlength: "Minimal 8 Karakter"
+          },
+          password2: {
+            required: "Please Enter Your Password Again",
+            minlength: "At Least 8 Character",
+            equalTo: "Password Not Match"
           }
         }
       });

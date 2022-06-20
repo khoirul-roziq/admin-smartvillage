@@ -167,6 +167,36 @@ class Main extends BaseController
         return $this->response->setJSON(["user" => $res, "csrfHash" => csrf_hash()]);
     }
 
+    public function checkEmail()
+    {
+        $user = new UserModel();
+        $username = $this->request->getPost("username");
+        $email = $this->request->getPost("email");
+
+        if ($user->where(["username" => $username, "email" => $email])->first() != NULL) {
+            $res = "true";
+        } else {
+            $res = "false";
+        }
+
+        return $this->response->setJSON(["user" => $res, "csrfHash" => csrf_hash()]);
+    }
+
+    public function forgot()
+    {
+        return view('templates/header', ["title" => "Login - Admin"]) . view('auth/edit');
+    }
+    public function update()
+    {
+        $user = new UserModel();
+
+        $data = [
+            "password" => $this->request->getPost("password")
+        ];
+
+        $user->update(["username" => $this->request->getPost('username')], $data);
+        return redirect()->to('/');
+    }
     public function logout()
     {
         $this->session->destroy();
