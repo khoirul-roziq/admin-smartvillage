@@ -48,14 +48,13 @@ class User extends BaseController
         if (!$this->validate([
             'nama' => 'required|min_length[3]',
             'email' => 'required|valid_email',
-            'username' => 'required|is_unique[users.username]',
             'password1' => [
-                'rules' => 'required|trim|min_length[8]|matches[password2]',
+                'rules' => 'trim|matches[password2]',
                 'errors' => [
                     'matches' => 'Password dont match!'
                 ]
             ],
-            'password2' => 'required|trim|matches[password1]'
+            'password2' => 'trim|matches[password1]'
         ])) {
             $validation = \Config\Services::validation();
 
@@ -63,12 +62,21 @@ class User extends BaseController
             return redirect()->to("user/$id/edit")->withInput()->with('validation', $validation);
         }
 
-        $userModel->save([
-            'id_user' => $id,
-            'nama_lengkap' => $this->request->getPost("nama"),
-            'username'  => $this->request->getPost("username"),
-            'email' => $this->request->getPost("email"),
-        ]);
+        if ($this->request->getPost('password1') == NULL) {
+
+            $userModel->save([
+                'id_user' => $id,
+                'nama_lengkap' => $this->request->getPost("nama"),
+                'email' => $this->request->getPost("email"),
+            ]);
+        } else {
+            $userModel->save([
+                'id_user' => $id,
+                'nama_lengkap' => $this->request->getPost("nama"),
+                'password' => password_hash($this->request->getPost("password1"), PASSWORD_DEFAULT),
+                'email' => $this->request->getPost("email"),
+            ]);
+        }
 
         session()->setFlashdata('massage', 'Data Pelanggan Berhasil Diubah!');
         return redirect()->to('/user');
