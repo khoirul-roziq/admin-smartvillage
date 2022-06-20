@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `barang_order` (
   CONSTRAINT `FK__data_transaksi` FOREIGN KEY (`id_transaksi`) REFERENCES `data_transaksi` (`id_transaksi`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.barang_order: ~1 rows (approximately)
+-- Dumping data for table admin_smartvillage.barang_order: ~2 rows (approximately)
 DELETE FROM `barang_order`;
 /*!40000 ALTER TABLE `barang_order` DISABLE KEYS */;
 INSERT INTO `barang_order` (`id_barang`, `kode_barang`, `nama_barang`, `harga_barang`, `qty`, `id_transaksi`) VALUES
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `data_transaksi` (
   CONSTRAINT `data_transaksi_ibfk_2` FOREIGN KEY (`id_pelanggan`) REFERENCES `data_pelanggan` (`id_pelanggan`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.data_transaksi: ~1 rows (approximately)
+-- Dumping data for table admin_smartvillage.data_transaksi: ~2 rows (approximately)
 DELETE FROM `data_transaksi`;
 /*!40000 ALTER TABLE `data_transaksi` DISABLE KEYS */;
 INSERT INTO `data_transaksi` (`id_transaksi`, `id_pelanggan`, `total`, `tanggal`, `status`) VALUES
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `layanan_order` (
   CONSTRAINT `FK__data_transaksi_layanan` FOREIGN KEY (`id_transaksi`) REFERENCES `data_transaksi` (`id_transaksi`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.layanan_order: ~1 rows (approximately)
+-- Dumping data for table admin_smartvillage.layanan_order: ~2 rows (approximately)
 DELETE FROM `layanan_order`;
 /*!40000 ALTER TABLE `layanan_order` DISABLE KEYS */;
 INSERT INTO `layanan_order` (`id_layanan`, `kode_layanan`, `nama_layanan`, `harga_layanan`, `id_transaksi`) VALUES
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `perjanjian_kerjasama` (
   CONSTRAINT `perjanjian_kerjasama_ibfk_1` FOREIGN KEY (`id_transaksi`) REFERENCES `data_transaksi` (`id_transaksi`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table admin_smartvillage.perjanjian_kerjasama: ~1 rows (approximately)
+-- Dumping data for table admin_smartvillage.perjanjian_kerjasama: ~2 rows (approximately)
 DELETE FROM `perjanjian_kerjasama`;
 /*!40000 ALTER TABLE `perjanjian_kerjasama` DISABLE KEYS */;
 INSERT INTO `perjanjian_kerjasama` (`id_pks`, `nama_desa`, `nama_kades`, `tanggal`, `id_transaksi`) VALUES
@@ -170,7 +170,7 @@ DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id_user`, `username`, `password`, `nama_lengkap`, `jabatan`, `role_id`, `email`, `no_telp`, `alamat`) VALUES
 	('62a19deb7cc67', 'admin', '$2a$12$twOWVeXBj42RVi8SKZlIDuLlJqzhnjVI4A8Lhjj3.0Ih0ak6QWbaW', '', 0, 321, '', '', ''),
-	('62ad51525f56b', 'ahmadsyafar', '$2y$10$Me37Xf9YSxVqcj5.6beqnOmL85.5F1aHh4LTGNagsQyAzBSgFe/gK', '', 0, 2, '', '', '');
+	('62aff9a85d569', 'ahmadsyafar', '$2y$10$UQ03EpTEVKxhbg7EWSbxeeSxrGlD9iZryy6Bf.rcpflZKbBs8lwiq', 'Ahmad Syafarudin', 0, 2, 'ahmadsyafar99@gmail.com', '', '');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
