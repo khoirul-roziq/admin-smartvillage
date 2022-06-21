@@ -191,10 +191,10 @@ class Main extends BaseController
         $user = new UserModel();
 
         $data = [
-            "password" => $this->request->getPost("password")
+            "password" => password_hash($this->request->getPost("password"), PASSWORD_DEFAULT),
         ];
-
-        $user->update(["username" => $this->request->getPost('username')], $data);
+        $id_user = $user->where("username", $this->request->getPost('username'))->first()['id_user'];
+        $user->update($id_user, $data);
         return redirect()->to('/');
     }
     public function logout()
