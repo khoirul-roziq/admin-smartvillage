@@ -16,19 +16,19 @@
                 <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
                     <label class="block text-sm">
                         <span class="text-gray-700 dark:text-gray-400">Nama Desa</span>
-                        <input id="namaDesa" name="namaDesa" type="text" value="<?= old('namaDesa'); ?>" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Masukkan Kode Layanan" />
+                        <input id="namaDesa" name="namaDesa" type="text" value="<?= old('namaDesa'); ?>" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Masukkan Nama Desa" />
                         <small style="color: red;"><?= $validation->getError('namaDesa'); ?></small>
                     </label>
 
                     <label class="block mt-4 text-sm">
                         <span class="text-gray-700 dark:text-gray-400">Nama Kades</span>
-                        <input id="namaKades" name="namaKades" type="text" value="<?= old('namaKades'); ?>" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Masukkan Nama Layanan" />
+                        <input id="namaKades" name="namaKades" type="text" value="<?= old('namaKades'); ?>" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Masukkan Nama Kades" />
                         <small style="color: red;"><?= $validation->getError('namaKades'); ?></small>
                     </label>
 
                     <label class="block mt-4 text-sm">
                         <span class="text-gray-700 dark:text-gray-400">Tanggal</span>
-                        <input id="tanggalPks" name="tanggalPks" type="date" value="<?= old('tanggalPks'); ?>" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Masukkan Harga Layanan" />
+                        <input id="tanggalPks" name="tanggalPks" type="date" value="<?= old('tanggalPks'); ?>" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" />
                         <small style="color: red;"><?= $validation->getError('tanggalPks'); ?></small>
                     </label>
 
