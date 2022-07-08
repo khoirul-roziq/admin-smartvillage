@@ -8,9 +8,10 @@
 
       <form action="<?= base_url('/transaksi/add') ?>" id="add_transaksi" method="POST">
         <?= csrf_field() ?>
+        
         <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
           <label class="block text-sm">
-            <span class="text-gray-700 dark:text-gray-400">Pelanggan</span>
+            <span class="text-gray-700 dark:text-gray-400">Pelanggan <a href="<?= base_url('/pelanggan/create') ?>" style="font-size:20px; font-weight: bold; color:dimgrey;">+</a></span>
             <select name="pelanggan" class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
               <?php foreach ($pelanggan as $index => $data) { ?>
                 <option value="<?= $data['id_pelanggan'] ?>"><?= $data["nama_pelanggan"] ?></option>

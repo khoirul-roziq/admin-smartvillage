@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\DataPelangganModel;
+use App\Models\UserModel;
 use App\Controllers\BaseController;
 use App\Models\DataBarangModel;
 use App\Models\DataTransaksiModel;
@@ -15,172 +16,164 @@ use Dompdf\Options;
 
 class NotaController extends BaseController
 {
-    public function index($id, $tanggal)
-    {
-        $transaksi = new DataTransaksiModel();
+    // public function index($id, $tanggal)
+    // {
+    //     $transaksi = new DataTransaksiModel();
 
-        $data = [];
-        foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $order) {
-            if ($order["kode_barang"] == NULL) {
-                $transaksi->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
-                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+    //     $transaksi = new DataTransaksiModel();
+    //     $id_transaksi = $transaksi->select("data_transaksi.id_transaksi")->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->orderBy("data_transaksi.id_transaksi")->findAll();
+    //     $transaksi->join("layanan_order", "layanan_order.id_transaksi = data_transaksi.id_transaksi", "left")
+    //         ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "left")
+    //         ->join("barang_order", "barang_order.id_transaksi = data_transaksi.id_transaksi", "left");
 
-                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
-                    $data2 = [
-                        "id_transaksi" => $detail["id_transaksi"],
-                        "id_pelanggan" => $detail["id_pelanggan"],
-                        "nama_pelanggan" => $detail["nama_pelanggan"],
-                        "alamat" => $detail["alamat"],
-                        "no_telp" => $detail["no_telp"],
-                        "nama_barang" => NULL,
-                        "harga_barang" => NULL,
-                        "qty" => NULL,
-                        "nama_layanan" => $detail["nama_layanan"],
-                        "harga_layanan" => $detail["harga_layanan"],
-                        "total" => $detail["total"],
-                        "tanggal" => $detail["tanggal"],
-                        "kode_barang" => $detail["kode_barang"],
-                        "kode_layanan" => $detail["kode_layanan"]
-                    ];
+    //     $data = [];
+    //     foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->orderBy("data_transaksi.id_transaksi")->findAll() as $index => $order) {
+    //         if ($order["kode_barang"] == NULL) {
+    //             $data2 = [
+    //                 "id_barang" => $order["id_barang"],
+    //                 "id_layanan" => $order["id_layanan"],
+    //                 "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
+    //                 "id_pelanggan" => $order["id_pelanggan"],
+    //                 "nama_pelanggan" => $order["nama_pelanggan"],
+    //                 "alamat" => $order["alamat"],
+    //                 "no_telp" => $order["no_telp"],
+    //                 "nama_barang" => NULL,
+    //                 "harga_barang" => NULL,
+    //                 "qty" => NULL,
+    //                 "nama_layanan" => $order["nama_layanan"],
+    //                 "harga_layanan" => $order["harga_layanan"],
+    //                 "total" => $order["total"],
+    //                 "tanggal" => $order["tanggal"],
+    //                 "kode_barang" => '-'
+    //             ];
 
-                    array_push($data, $data2);
-                }
-            } else if ($order["kode_layanan"] == NULL) {
-                $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
-                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+    //             array_push($data, $data2);
+    //         } else if ($order["kode_layanan"] == NULL) {
+    //             $data2 = [
+    //                 "id_barang" => $order["id_barang"],
+    //                 "id_layanan" => $order["id_layanan"],
+    //                 "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
+    //                 "id_pelanggan" => $order["id_pelanggan"],
+    //                 "nama_pelanggan" => $order["nama_pelanggan"],
+    //                 "alamat" => $order["alamat"],
+    //                 "no_telp" => $order["no_telp"],
+    //                 "nama_barang" => $order["nama_barang"],
+    //                 "harga_barang" => $order["harga_barang"],
+    //                 "qty" => $order["qty"],
+    //                 "nama_layanan" => NULL,
+    //                 "harga_layanan" => NULL,
+    //                 "total" => $order["total"],
+    //                 "tanggal" => $order["tanggal"],
+    //                 "kode_layanan" => '-'
+    //             ];
 
-                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
-                    $data2 = [
-                        "id_transaksi" => $detail["id_transaksi"],
-                        "id_pelanggan" => $detail["id_pelanggan"],
-                        "nama_pelanggan" => $detail["nama_pelanggan"],
-                        "alamat" => $detail["alamat"],
-                        "no_telp" => $detail["no_telp"],
-                        "nama_barang" => $detail["nama_barang"],
-                        "harga_barang" => $detail["harga_barang"],
-                        "qty" => $detail["qty"],
-                        "nama_layanan" => NULL,
-                        "harga_layanan" => NULL,
-                        "total" => $detail["total"],
-                        "tanggal" => $detail["tanggal"],
-                        "kode_barang" => $detail["kode_barang"],
-                        "kode_layanan" => $detail["kode_layanan"]
-                    ];
+    //             array_push($data, $data2);
+    //         } else {
+    //             $data2 = [
+    //                 "id_barang" => $order["id_barang"],
+    //                 "id_layanan" => $order["id_layanan"],
+    //                 "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
+    //                 "id_pelanggan" => $order["id_pelanggan"],
+    //                 "nama_pelanggan" => $order["nama_pelanggan"],
+    //                 "alamat" => $order["alamat"],
+    //                 "no_telp" => $order["no_telp"],
+    //                 "nama_barang" => $order["nama_barang"],
+    //                 "harga_barang" => $order["harga_barang"],
+    //                 "qty" => $order["qty"],
+    //                 "nama_layanan" => $order["nama_layanan"],
+    //                 "harga_layanan" => $order["harga_layanan"],
+    //                 "total" => $order["total"],
+    //                 "tanggal" => $order["tanggal"],
+    //             ];
 
-                    array_push($data, $data2);
-                }
-            } else {
-                $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
-                    ->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
-                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+    //             array_push($data, $data2);
+    //         }
+    //     }
 
-                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
-                    $data2 = [
-                        "id_transaksi" => $detail["id_transaksi"],
-                        "id_pelanggan" => $detail["id_pelanggan"],
-                        "nama_pelanggan" => $detail["nama_pelanggan"],
-                        "alamat" => $detail["alamat"],
-                        "no_telp" => $detail["no_telp"],
-                        "nama_barang" => $detail["nama_barang"],
-                        "harga_barang" => $detail["harga_barang"],
-                        "qty" => $detail["qty"],
-                        "nama_layanan" => $detail["nama_layanan"],
-                        "harga_layanan" => $detail["harga_layanan"],
-                        "total" => $detail["total"],
-                        "tanggal" => $detail["tanggal"],
-                        "kode_barang" => $detail["kode_barang"],
-                        "kode_layanan" => $detail["kode_layanan"]
-                    ];
-
-                    array_push($data, $data2);
-                }
-            }
-        }
-        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('nota/index', ["transaksi" => $data]);
-    }
+    //     return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('nota/index', ["transaksi" => $data]);
+    // }
 
     public function download($id, $tanggal)
     {
         $transaksi = new DataTransaksiModel();
+        $user = new UserModel();
+        $id_transaksi = $transaksi->select("data_transaksi.id_transaksi")->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->orderBy("data_transaksi.id_transaksi")->findAll();
+        $transaksi->join("layanan_order", "layanan_order.id_transaksi = data_transaksi.id_transaksi", "left")
+            ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "left")
+            ->join("barang_order", "barang_order.id_transaksi = data_transaksi.id_transaksi", "left");
+
+        $auth = $user->where(['username' =>  $this->session->get('username')])->first();
 
         $data = [];
-        foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->findAll() as $order) {
+        foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->orderBy("data_transaksi.id_transaksi")->findAll() as $index => $order) {
             if ($order["kode_barang"] == NULL) {
-                $transaksi->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
-                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+                $data2 = [
+                    "id_barang" => $order["id_barang"],
+                    "id_layanan" => $order["id_layanan"],
+                    "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
+                    "id_pelanggan" => $order["id_pelanggan"],
+                    "nama_pelanggan" => $order["nama_pelanggan"],
+                    "alamat" => $order["alamat"],
+                    "no_telp" => $order["no_telp"],
+                    "nama_barang" => NULL,
+                    "harga_barang" => NULL,
+                    "qty" => NULL,
+                    "nama_layanan" => $order["nama_layanan"],
+                    "harga_layanan" => $order["harga_layanan"],
+                    "total" => $order["total"],
+                    "tanggal" => $order["tanggal"],
+                    "kode_barang" => $order["kode_barang"],
+                    "kode_layanan" => $order["kode_layanan"],
+                ];
 
-                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
-                    $data2 = [
-                        "id_transaksi" => $detail["id_transaksi"],
-                        "id_pelanggan" => $detail["id_pelanggan"],
-                        "nama_pelanggan" => $detail["nama_pelanggan"],
-                        "alamat" => $detail["alamat"],
-                        "no_telp" => $detail["no_telp"],
-                        "nama_barang" => NULL,
-                        "harga_barang" => NULL,
-                        "qty" => NULL,
-                        "nama_layanan" => $detail["nama_layanan"],
-                        "harga_layanan" => $detail["harga_layanan"],
-                        "total" => $detail["total"],
-                        "tanggal" => $detail["tanggal"],
-                        "kode_barang" => $detail["kode_barang"],
-                        "kode_layanan" => $detail["kode_layanan"]
-                    ];
-
-                    array_push($data, $data2);
-                }
+                array_push($data, $data2);
             } else if ($order["kode_layanan"] == NULL) {
-                $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
-                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+                $data2 = [
+                    "id_barang" => $order["id_barang"],
+                    "id_layanan" => $order["id_layanan"],
+                    "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
+                    "id_pelanggan" => $order["id_pelanggan"],
+                    "nama_pelanggan" => $order["nama_pelanggan"],
+                    "alamat" => $order["alamat"],
+                    "no_telp" => $order["no_telp"],
+                    "nama_barang" => $order["nama_barang"],
+                    "harga_barang" => $order["harga_barang"],
+                    "qty" => $order["qty"],
+                    "nama_layanan" => NULL,
+                    "harga_layanan" => NULL,
+                    "total" => $order["total"],
+                    "tanggal" => $order["tanggal"],
+                    "kode_barang" => $order["kode_barang"],
+                    "kode_layanan" => $order["kode_layanan"],
+                ];
 
-                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
-                    $data2 = [
-                        "id_transaksi" => $detail["id_transaksi"],
-                        "id_pelanggan" => $detail["id_pelanggan"],
-                        "nama_pelanggan" => $detail["nama_pelanggan"],
-                        "alamat" => $detail["alamat"],
-                        "no_telp" => $detail["no_telp"],
-                        "nama_barang" => $detail["nama_barang"],
-                        "harga_barang" => $detail["harga_barang"],
-                        "qty" => $detail["qty"],
-                        "nama_layanan" => NULL,
-                        "harga_layanan" => NULL,
-                        "total" => $detail["total"],
-                        "tanggal" => $detail["tanggal"],
-                        "kode_barang" => $detail["kode_barang"],
-                        "kode_layanan" => $detail["kode_layanan"]
-                    ];
-
-                    array_push($data, $data2);
-                }
+                array_push($data, $data2);
             } else {
-                $transaksi->join("data_barang", "data_barang.kode_barang = data_transaksi.kode_barang", "inner")
-                    ->join("data_layanan", "data_layanan.kode_layanan = data_transaksi.kode_layanan", "inner")
-                    ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "inner");
+                $data2 = [
+                    "id_barang" => $order["id_barang"],
+                    "id_layanan" => $order["id_layanan"],
+                    "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
+                    "id_pelanggan" => $order["id_pelanggan"],
+                    "nama_pelanggan" => $order["nama_pelanggan"],
+                    "alamat" => $order["alamat"],
+                    "no_telp" => $order["no_telp"],
+                    "nama_barang" => $order["nama_barang"],
+                    "harga_barang" => $order["harga_barang"],
+                    "qty" => $order["qty"],
+                    "nama_layanan" => $order["nama_layanan"],
+                    "harga_layanan" => $order["harga_layanan"],
+                    "total" => $order["total"],
+                    "tanggal" => $order["tanggal"],
+                    "kode_barang" => $order["kode_barang"],
+                    "kode_layanan" => $order["kode_layanan"],
+                ];
 
-                foreach ($transaksi->where(["data_transaksi.id_transaksi" => $order["id_transaksi"], "tanggal" => $tanggal])->findAll() as $detail) {
-                    $data2 = [
-                        "id_transaksi" => $detail["id_transaksi"],
-                        "id_pelanggan" => $detail["id_pelanggan"],
-                        "nama_pelanggan" => $detail["nama_pelanggan"],
-                        "alamat" => $detail["alamat"],
-                        "no_telp" => $detail["no_telp"],
-                        "nama_barang" => $detail["nama_barang"],
-                        "harga_barang" => $detail["harga_barang"],
-                        "qty" => $detail["qty"],
-                        "nama_layanan" => $detail["nama_layanan"],
-                        "harga_layanan" => $detail["harga_layanan"],
-                        "total" => $detail["total"],
-                        "tanggal" => $detail["tanggal"],
-                        "kode_barang" => $detail["kode_barang"],
-                        "kode_layanan" => $detail["kode_layanan"]
-                    ];
-
-                    array_push($data, $data2);
-                }
+                array_push($data, $data2);
             }
         }
-        return view('templates/header', ["title" => "Transaksi"]) . view('nota/download', ["transaksi" => $data]);
+
+
+        return view('templates/header', ["title" => "Transaksi"]) . view('nota/download', ["transaksi" => $data, "auth" => $auth]);
 
     }
 }
