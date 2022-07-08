@@ -206,7 +206,7 @@
           },
           password: {
             required: "Please Enter Your Password",
-            minlength: "Minimal 8 Karakter"
+            minlength: "At Least 8 Character"
           },
           password2: {
             required: "Please Enter Your Password Again",

@@ -16,83 +16,6 @@ use Dompdf\Options;
 
 class NotaController extends BaseController
 {
-    // public function index($id, $tanggal)
-    // {
-    //     $transaksi = new DataTransaksiModel();
-
-    //     $transaksi = new DataTransaksiModel();
-    //     $id_transaksi = $transaksi->select("data_transaksi.id_transaksi")->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->orderBy("data_transaksi.id_transaksi")->findAll();
-    //     $transaksi->join("layanan_order", "layanan_order.id_transaksi = data_transaksi.id_transaksi", "left")
-    //         ->join("data_pelanggan", "data_pelanggan.id_pelanggan = data_transaksi.id_pelanggan", "left")
-    //         ->join("barang_order", "barang_order.id_transaksi = data_transaksi.id_transaksi", "left");
-
-    //     $data = [];
-    //     foreach ($transaksi->where(["data_transaksi.id_pelanggan" => $id, "tanggal" => $tanggal])->orderBy("data_transaksi.id_transaksi")->findAll() as $index => $order) {
-    //         if ($order["kode_barang"] == NULL) {
-    //             $data2 = [
-    //                 "id_barang" => $order["id_barang"],
-    //                 "id_layanan" => $order["id_layanan"],
-    //                 "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
-    //                 "id_pelanggan" => $order["id_pelanggan"],
-    //                 "nama_pelanggan" => $order["nama_pelanggan"],
-    //                 "alamat" => $order["alamat"],
-    //                 "no_telp" => $order["no_telp"],
-    //                 "nama_barang" => NULL,
-    //                 "harga_barang" => NULL,
-    //                 "qty" => NULL,
-    //                 "nama_layanan" => $order["nama_layanan"],
-    //                 "harga_layanan" => $order["harga_layanan"],
-    //                 "total" => $order["total"],
-    //                 "tanggal" => $order["tanggal"],
-    //                 "kode_barang" => '-'
-    //             ];
-
-    //             array_push($data, $data2);
-    //         } else if ($order["kode_layanan"] == NULL) {
-    //             $data2 = [
-    //                 "id_barang" => $order["id_barang"],
-    //                 "id_layanan" => $order["id_layanan"],
-    //                 "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
-    //                 "id_pelanggan" => $order["id_pelanggan"],
-    //                 "nama_pelanggan" => $order["nama_pelanggan"],
-    //                 "alamat" => $order["alamat"],
-    //                 "no_telp" => $order["no_telp"],
-    //                 "nama_barang" => $order["nama_barang"],
-    //                 "harga_barang" => $order["harga_barang"],
-    //                 "qty" => $order["qty"],
-    //                 "nama_layanan" => NULL,
-    //                 "harga_layanan" => NULL,
-    //                 "total" => $order["total"],
-    //                 "tanggal" => $order["tanggal"],
-    //                 "kode_layanan" => '-'
-    //             ];
-
-    //             array_push($data, $data2);
-    //         } else {
-    //             $data2 = [
-    //                 "id_barang" => $order["id_barang"],
-    //                 "id_layanan" => $order["id_layanan"],
-    //                 "id_transaksi" => $id_transaksi[$index]["id_transaksi"],
-    //                 "id_pelanggan" => $order["id_pelanggan"],
-    //                 "nama_pelanggan" => $order["nama_pelanggan"],
-    //                 "alamat" => $order["alamat"],
-    //                 "no_telp" => $order["no_telp"],
-    //                 "nama_barang" => $order["nama_barang"],
-    //                 "harga_barang" => $order["harga_barang"],
-    //                 "qty" => $order["qty"],
-    //                 "nama_layanan" => $order["nama_layanan"],
-    //                 "harga_layanan" => $order["harga_layanan"],
-    //                 "total" => $order["total"],
-    //                 "tanggal" => $order["tanggal"],
-    //             ];
-
-    //             array_push($data, $data2);
-    //         }
-    //     }
-
-    //     return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('nota/index', ["transaksi" => $data]);
-    // }
-
     public function download($id, $tanggal)
     {
         $transaksi = new DataTransaksiModel();
@@ -172,8 +95,10 @@ class NotaController extends BaseController
             }
         }
 
-
-        return view('templates/header', ["title" => "Transaksi"]) . view('nota/download', ["transaksi" => $data, "auth" => $auth]);
-
+        if ($data == NULL) {
+            return redirect()->to("/transaksi");
+        } else {
+            return view('templates/header', ["title" => "Transaksi"]) . view('nota/download', ["transaksi" => $data, "auth" => $auth]);
+        }
     }
 }
