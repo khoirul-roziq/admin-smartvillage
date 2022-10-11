@@ -48,7 +48,7 @@
                                             </svg>
                                         </button>
                                         <button onclick="
-                                        if(confirm('Do you want to delete this data?')){
+                                        if(confirm('Apakah anda yakin ingin menghapus data PKS ini?')){
                                         window.location.href=`<?= base_url('pks/' . $index['nama_desa'] . '/' . $index['tanggal'] . '/delete') ?>`
                                         }
                                         " class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray" aria-label="Delete">

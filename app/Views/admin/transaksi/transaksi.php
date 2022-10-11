@@ -74,17 +74,26 @@
                         <td class="px-4 py-3">
                           <div class="flex items-center space-x-4 text-sm">
 
-                            <button onclick="window.location.href=`<?= base_url('/transaksi/approve/' . $data['id_pelanggan'] . '/' . $data['tanggal']) ?>`" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-green-600 rounded-lg dark:text-black-400 focus:outline-none focus:shadow-outline-gray" aria-label="Approve">
+                            <button onclick="
+                            if(confirm('Jadikan status transaksi Approve!')){
+                            window.location.href=`<?= base_url('/transaksi/approved/' . $data['id_pelanggan'] . '/' . $data['tanggal']) ?>`
+                            }" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-green-600 rounded-lg dark:text-black-400 focus:outline-none focus:shadow-outline-gray" aria-label="Approve">
                               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                               </svg>
                             </button>
-                            <button onclick="window.location.href=`<?= base_url('/transaksi/pending/' . $data['id_pelanggan'] . '/' . $data['tanggal']) ?>`" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-orange-700 rounded-lg dark:text-black-400 focus:outline-none focus:shadow-outline-gray" aria-label="Pending">
+                            <button onclick="
+                            if(confirm('Jadikan status transaksi Pending!')){
+                            window.location.href=`<?= base_url('/transaksi/pending/' . $data['id_pelanggan'] . '/' . $data['tanggal']) ?>`
+                            }" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-orange-700 rounded-lg dark:text-black-400 focus:outline-none focus:shadow-outline-gray" aria-label="Pending">
                               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
                               </svg>
                             </button>
-                            <button onclick="window.location.href=`<?= base_url('/transaksi/cancel/' . $data['id_pelanggan'] . '/' . $data['tanggal']) ?>`" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-black-400 focus:outline-none focus:shadow-outline-gray" aria-label="Cancel">
+                            <button onclick="
+                            if(confirm('Jadikan status transaksi Cencel!')){
+                            window.location.href=`<?= base_url('/transaksi/cancel/' . $data['id_pelanggan'] . '/' . $data['tanggal']) ?>`
+                            }" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-black-400 focus:outline-none focus:shadow-outline-gray" aria-label="Cancel">
                               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" class="bi bi-x-octagon-fill" viewBox="0 0 16 16">
                                 <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z" />
                               </svg>
@@ -102,7 +111,10 @@
                             </button>
                             <?php $session = \Config\Services::session();
                             if ($session->get('role_id') == 321) : ?>
-                              <button onclick="window.location.href=`<?= base_url('/transaksi/delete/')  . '/' . $data['id_pelanggan'] . '/' . $data['tanggal'] ?>`" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray" aria-label="Delete">
+                              <button onclick="
+                              if(confirm('Apakah anda yakin ingin menghapus transaksi ini?')){
+                              window.location.href=`<?= base_url('/transaksi/delete/')  . '/' . $data['id_pelanggan'] . '/' . $data['tanggal'] ?>`
+                              }" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray" aria-label="Delete">
                                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                                   <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                 </svg>

@@ -46,6 +46,8 @@ $routes->post('/update', 'Main::update');
 
 $routes->get('/transaksi', 'Transaksi::index');
 $routes->get('/transaksi/create', 'Transaksi::createForm');
+$routes->get('/transaksi/create/new', 'Transaksi::createFormNew');
+$routes->add('/transaksi/add/new', 'Transaksi::createNew');
 $routes->add('/transaksi/add', 'Transaksi::create');
 $routes->get('/transaksi/detail/(:any)', 'Transaksi::detail/$1');
 $routes->get('/transaksi/approve/(:any)', 'Transaksi::approve/$1');

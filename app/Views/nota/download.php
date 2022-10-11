@@ -74,7 +74,7 @@
                     $totalHarga = 0;
 
                     foreach ($transaksi as $index => $data) : ?>
-                        <?php if (esc($data["kode_barang"] != NULL)) : ?>
+                        <?php if (esc($data["id_barang"] != NULL)) : ?>
                             <td><?php echo $no;
                                 $no++;  ?></td>
                             <td><?php echo esc($data["kode_barang"]); ?></td>
@@ -88,7 +88,7 @@
                     <?php endforeach;
 
                     foreach ($transaksi as $index => $data) : ?>
-                        <?php if (esc($data["kode_layanan"] != NULL)) : ?>
+                        <?php if (esc($data["id_layanan"] != NULL)) : ?>
                             <td><?php echo $no;
                                 $no++;  ?></td>
                             <td><?php echo esc($data["kode_layanan"]); ?></td>
@@ -123,7 +123,7 @@
                     <p>Hormat Kami,</p>
                 </div>
                 <div>
-                    <p>Whindi Puspita</p>
+                    <p><?= $auth['nama_lengkap'] ?></p>
                 </div>
             </div>
         </div>

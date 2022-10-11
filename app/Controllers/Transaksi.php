@@ -125,6 +125,21 @@ class Transaksi extends BaseController
         return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi/add_transaksi', $data);
     }
 
+    public function createFormNew()
+    {
+
+        $pelanggan = new DataPelangganModel();
+        $barang = new DataBarangModel();
+        $layanan = new DataLayananModel();
+
+        $data = [
+            "pelanggan" => $pelanggan->findAll(),
+            "barang" => $barang->findAll(),
+            "layanan" => $layanan->findAll()
+        ];
+        return view('templates/header', ["title" => "Transaksi"]) . view('templates/menu') . view('admin/transaksi/add_transaksi_new', $data);
+    }
+
     public function create()
     {
         $transaksi = new DataTransaksiModel();
@@ -136,6 +151,179 @@ class Transaksi extends BaseController
         $layanan_order = new LayananOrderModel();
         $jumlah_barang = $this->request->getPost("jumlah_barang");
         $jumlah_layanan = $this->request->getPost("jumlah_layanan");
+
+        $date = new DateTime("now");
+        if ($jumlah_barang >= $jumlah_layanan) {
+            for ($i = 0; $i < $jumlah_barang; $i++) {
+                $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first();
+                if ($temp_status != NULL) {
+                    if ($temp_status["status"] == 1) {
+                        $status = 1;
+                    } else if ($temp_status["status"] == 0) {
+                        $status = 0;
+                    } else {
+                        $status = 2;
+                    }
+                } else {
+                    $status = 2;
+                }
+
+                $data = [
+                    "id_transaksi" => uniqid(),
+                    "id_pelanggan" => $this->request->getPost("pelanggan"),
+                    "tanggal" => $date->format('Y-m-d'),
+                    "status" => $status
+                ];
+                $transaksi->insert($data);
+
+                $nama_barang = NULL;
+                $harga_barang = NULL;
+                if ($this->request->getPost("barang_order" . $i) != NULL) {
+                    $nama_barang = $barang->select('nama_barang')
+                        ->where("kode_barang", $this->request->getPost("barang_order" . $i))
+                        ->first()['nama_barang'];
+                    $harga_barang = $barang->select('harga_barang')
+                        ->where("kode_barang", $this->request->getPost("barang_order" . $i))
+                        ->first()['harga_barang'];
+                    $order = [
+                        "id_barang" => uniqid(),
+                        "kode_barang" => $this->request->getPost("barang_order" . $i),
+                        "nama_barang" => $nama_barang,
+                        "harga_barang" => $harga_barang,
+                        "qty" => $this->request->getPost("qty" . $i),
+                        "id_transaksi" => $data['id_transaksi']
+                    ];
+
+                    $barang_order->insert($order);
+                }
+
+                $nama_layanan = NULL;
+                $harga_layanan = NULL;
+                if ($this->request->getPost("layanan_order" . $i) != NULL) {
+                    $nama_layanan = $layanan->select('nama_layanan')
+                        ->where("kode_layanan", $this->request->getPost("layanan_order" . $i))
+                        ->first()['nama_layanan'];
+                    $harga_layanan = $layanan->select('harga_layanan')
+                        ->where("kode_layanan", $this->request->getPost("layanan_order" . $i))
+                        ->first()['harga_layanan'];
+                    $order = [
+                        "id_layanan" => uniqid(),
+                        "kode_layanan" => $this->request->getPost("layanan_order" . $i),
+                        "nama_layanan" => $nama_layanan,
+                        "harga_layanan" => $harga_layanan,
+                        "id_transaksi" => $data['id_transaksi']
+                    ];
+                    $layanan_order->insert($order);
+                }
+
+                $nama_desa = $pelanggan->where("id_pelanggan", $data["id_pelanggan"])->first()["nama_desa"];
+                $data_pks = [
+                    "id_pks" => uniqid(),
+                    "nama_desa" => $nama_desa,
+                    "tanggal" => $data["tanggal"],
+                    "id_transaksi" => $data["id_transaksi"],
+                ];
+
+                $pks->insert($data_pks);
+            }
+        } else {
+            for ($i = 0; $i < $jumlah_layanan; $i++) {
+                $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first();
+                if ($temp_status != NULL) {
+                    if ($temp_status["status"] == 1) {
+                        $status = 1;
+                    } else if ($temp_status["status"] == 0) {
+                        $status = 0;
+                    } else {
+                        $status = 2;
+                    }
+                } else {
+                    $status = 2;
+                }
+
+                $data = [
+                    "id_transaksi" => uniqid(),
+                    "id_pelanggan" => $this->request->getPost("pelanggan"),
+                    "tanggal" => $date->format('Y-m-d'),
+                    "status" => 2
+                ];
+                $transaksi->insert($data);
+
+                $nama_barang = NULL;
+                $harga_barang = NULL;
+                if ($this->request->getPost("barang_order" . $i) != NULL) {
+                    $nama_barang = $barang->select('nama_barang')
+                        ->where("kode_barang", $this->request->getPost("barang_order" . $i))
+                        ->first()['nama_barang'];
+                    $harga_barang = $barang->select('harga_barang')
+                        ->where("kode_barang", $this->request->getPost("barang_order" . $i))
+                        ->first()['harga_barang'];
+                    $order = [
+                        "id_barang" => uniqid(),
+                        "kode_barang" => $this->request->getPost("barang_order" . $i),
+                        "nama_barang" => $nama_barang,
+                        "harga_barang" => $harga_barang,
+                        "qty" => $this->request->getPost("qty" . $i),
+                        "id_transaksi" => $data['id_transaksi']
+                    ];
+                    $barang_order->insert($order);
+                }
+
+                $nama_layanan = NULL;
+                $harga_layanan = NULL;
+                if ($this->request->getPost("layanan_order" . $i) != NULL) {
+                    $nama_layanan = $layanan->select('nama_layanan')
+                        ->where("kode_layanan", $this->request->getPost("layanan_order" . $i))
+                        ->first()['nama_layanan'];
+                    $harga_layanan = $layanan->select('harga_layanan')
+                        ->where("kode_layanan", $this->request->getPost("layanan_order" . $i))
+                        ->first()['harga_layanan'];
+                    $order = [
+                        "id_layanan" => uniqid(),
+                        "kode_layanan" => $this->request->getPost("layanan_order" . $i),
+                        "nama_layanan" => $nama_layanan,
+                        "harga_layanan" => $harga_layanan,
+                        "id_transaksi" => $data['id_transaksi']
+                    ];
+                    $layanan_order->insert($order);
+                }
+
+                $nama_desa = $pelanggan->where("id_pelanggan", $data["id_pelanggan"])->first()["nama_desa"];
+                $data_pks = [
+                    "id_pks" => uniqid(),
+                    "nama_desa" => $nama_desa,
+                    "tanggal" => $data["tanggal"],
+                    "id_transaksi" => $data["id_transaksi"],
+                ];
+
+                $pks->insert($data_pks);
+            }
+        }
+
+        return redirect()->to('/transaksi');
+    }
+
+    public function createNew()
+    {
+        $transaksi = new DataTransaksiModel();
+        $pks = new PerjanjianKerjasamaModel();
+        $pelanggan = new DataPelangganModel();
+        $barang = new DataBarangModel();
+        $layanan = new DataLayananModel();
+        $barang_order = new BarangOrderModel();
+        $layanan_order = new LayananOrderModel();
+        $jumlah_barang = $this->request->getPost("jumlah_barang");
+        $jumlah_layanan = $this->request->getPost("jumlah_layanan");
+
+
+        $dataPelanggan = [
+            'id_pelanggan' => uniqid(),
+            'nama_pelanggan' => $this->request->getPost("namaPelanggan"),
+            'nama_desa'  => $this->request->getPost("namaDesa"),
+            'no_telp' => $this->request->getPost("telepon"),
+            'email' => $this->request->getPost("email"),
+            'alamat' => $this->request->getPost("alamat"),
+        ];
 
         $date = new DateTime("now");
         if ($jumlah_barang >= $jumlah_layanan) {
