@@ -102,6 +102,10 @@ $routes->post('registration/store', 'RegistrationController::store');
 $routes->get('/transaksi/nota/(:any)', 'NotaController::index/$1');
 $routes->get('/transaksi/nota-download/(:any)', 'NotaController::download/$1');
 
+$routes->get('/profil', 'Profil::index');
+$routes->get('profil/edit', 'Profil::edit');
+$routes->post('profil/update/(:segment)', 'Profil::update/$1');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
