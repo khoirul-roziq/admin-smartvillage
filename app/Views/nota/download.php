@@ -6,6 +6,8 @@
     $alamat = $transaksi[0]["alamat"];
     $telp = $transaksi[0]["no_telp"];
     $tanggal = $transaksi[0]["tanggal"];
+    $kode_nota = $transaksi[0]["kode_nota"];
+    $nomor_nota = $transaksi[0]["nomor_nota"];
     ?>
 
     <header>
@@ -22,7 +24,7 @@
                 <table>
                     <tr>
                         <td width="80px">No</td>
-                        <td>: INV-DJ1244</td>
+                        <td>: <?= $kode_nota . $nomor_nota ?></td>
                     </tr>
                     <tr>
                         <td width="80px">Date</td>

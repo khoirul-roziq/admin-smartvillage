@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\DataBarangModel;
+use App\Controllers\BaseController;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class BarangController extends BaseController
 {
@@ -143,5 +145,91 @@ class BarangController extends BaseController
         $barangModel->delete($kodeBarang);
         session()->setFlashdata('massage', 'Data barang Berhasil Dihapus!');
         return redirect('barang');
+    }
+
+    //fungsi export data barang ke excel
+    public function export()
+    {
+        $barangModel = new DataBarangModel();
+        $barang = $barangModel->findAll();
+
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Kode Barang')
+            ->setCellValue('B1', 'Nama Barang')
+            ->setCellValue('C1', 'Harga Barang');
+
+        $kolom = 2;
+        $nomor = 1;
+        foreach ($barang as $data) {
+            $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('A' . $kolom, $data['kode_barang'])
+                ->setCellValue('B' . $kolom, $data['nama_barang'])
+                ->setCellValue('C' . $kolom, $data['harga_barang']);
+            $kolom++;
+            $nomor++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Data Barang';
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+        ob_end_clean();
+        $writer->save('php://output');
+        die();
+    }
+
+    public function importFile()
+    {
+        $data = [
+            'title' => 'Data Barang',
+            'validation' => \Config\Services::validation()
+        ];
+        return view('templates/header', ["title" => "Pelanggan"]) . view('templates/menu') . view('admin/barang/import', $data);
+    }
+
+    //fungsi import data barang dari excel
+    public function import()
+    {
+        $db = \Config\Database::connect();
+        $barangModel = new DataBarangModel();
+
+        $file = $this->request->getFile('file');
+        $ext = $file->getClientExtension();
+
+        if ($ext == 'xlsx') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        } else {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+        }
+
+        $spreadsheet = $reader->load($file);
+        $data = $spreadsheet->getActiveSheet()->toArray();
+
+        $data2= [];
+        $jumlah = count($data);
+        if ($jumlah > 1) {
+            for ($i = 1; $i < $jumlah; $i++) {
+                $kode_barang = $data[$i]['0'];
+                $nama_barang = $data[$i]['1'];
+                $harga_barang = $data[$i]['2'];
+                // print($kode_barang)
+                array_push($data2, 
+                    [
+                        'kode_barang' => $kode_barang,
+                        'nama_barang' => $nama_barang,
+                        'harga_barang' => $harga_barang
+                    ]
+                );
+            }
+            $barangModel->insertBatch($data2);
+            session()->setFlashdata('massage', 'Data Barang Berhasil Diimport!');
+            return redirect('barang');
+        } else {
+            session()->setFlashdata('massage', 'Data Barang Gagal Diimport!');
+            return redirect('barang');
+        }
     }
 }

@@ -2,16 +2,17 @@
 
 namespace App\Controllers;
 
-use App\Models\DataPelangganModel;
-use App\Controllers\BaseController;
-use App\Models\BarangOrderModel;
-use App\Models\DataBarangModel;
-use App\Models\DataTransaksiModel;
-use App\Models\DataLayananModel;
-use App\Models\LayananOrderModel;
-use App\Models\PerjanjianKerjasamaModel;
 use DateTime;
 use Kint\Zval\Value;
+use App\Models\ProfilModel;
+use App\Models\DataBarangModel;
+use App\Models\BarangOrderModel;
+use App\Models\DataLayananModel;
+use App\Models\LayananOrderModel;
+use App\Models\DataPelangganModel;
+use App\Models\DataTransaksiModel;
+use App\Controllers\BaseController;
+use App\Models\PerjanjianKerjasamaModel;
 
 class Transaksi extends BaseController
 {
@@ -149,12 +150,44 @@ class Transaksi extends BaseController
         $layanan = new DataLayananModel();
         $barang_order = new BarangOrderModel();
         $layanan_order = new LayananOrderModel();
+        $profil = new ProfilModel();
         $jumlah_barang = $this->request->getPost("jumlah_barang");
         $jumlah_layanan = $this->request->getPost("jumlah_layanan");
-
+        $id_pelanggan = $this->request->getPost("pelanggan");
+        $kode_nota = $profil->first()["kode_nota"];
         $date = new DateTime("now");
         if ($jumlah_barang >= $jumlah_layanan) {
             for ($i = 0; $i < $jumlah_barang; $i++) {
+                $nota = $transaksi->where("kode_nota", $kode_nota)->findAll();
+                foreach ($nota as $n) {
+                    $nota = $n;
+                }
+                print_r($nota);
+                if ($nota != NULL) {
+                    $nomor_nota = (int)$nota["nomor_nota"];
+                    if ($nomor_nota != NULL && $nota["kode_nota"] == $kode_nota && $nota["id_pelanggan"] == $id_pelanggan && $nota["tanggal"] == $date->format('Y-m-d')) {
+                        if ($nomor_nota < 10) {
+                            $nomor_nota = "000" . $nomor_nota;
+                        } else if ($nomor_nota < 100) {
+                            $nomor_nota = "00" . $nomor_nota;
+                        } else if ($nomor_nota < 1000) {
+                            $nomor_nota = "0" . $nomor_nota;
+                        }
+                    } else if ($nomor_nota != NULL && $nota["kode_nota"] == $kode_nota) {
+                        $nomor_nota++;
+                        if ($nomor_nota < 10) {
+                            $nomor_nota = "000" . $nomor_nota;
+                        } else if ($nomor_nota < 100) {
+                            $nomor_nota = "00" . $nomor_nota;
+                        } else if ($nomor_nota < 1000) {
+                            $nomor_nota = "0" . $nomor_nota;
+                        }
+                    } else {
+                        $nomor_nota = "0001";
+                    }
+                } else {
+                    $nomor_nota = "0001";
+                }
                 $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first();
                 if ($temp_status != NULL) {
                     if ($temp_status["status"] == 1) {
@@ -172,8 +205,11 @@ class Transaksi extends BaseController
                     "id_transaksi" => uniqid(),
                     "id_pelanggan" => $this->request->getPost("pelanggan"),
                     "tanggal" => $date->format('Y-m-d'),
-                    "status" => $status
+                    "status" => $status,
+                    "kode_nota" => $kode_nota,
+                    "nomor_nota" => $nomor_nota
                 ];
+
                 $transaksi->insert($data);
 
                 $nama_barang = NULL;
@@ -228,6 +264,36 @@ class Transaksi extends BaseController
             }
         } else {
             for ($i = 0; $i < $jumlah_layanan; $i++) {
+                $nota = $transaksi->where("kode_nota", $kode_nota)->findAll();
+                foreach ($nota as $n) {
+                    $nota = $n;
+                }
+                print_r($nota);
+                if ($nota != NULL) {
+                    $nomor_nota = (int)$nota["nomor_nota"];
+                    if ($nomor_nota != NULL && $nota["kode_nota"] == $kode_nota && $nota["id_pelanggan"] == $id_pelanggan && $nota["tanggal"] == $date->format('Y-m-d')) {
+                        if ($nomor_nota < 10) {
+                            $nomor_nota = "000" . $nomor_nota;
+                        } else if ($nomor_nota < 100) {
+                            $nomor_nota = "00" . $nomor_nota;
+                        } else if ($nomor_nota < 1000) {
+                            $nomor_nota = "0" . $nomor_nota;
+                        }
+                    } else if ($nomor_nota != NULL && $nota["kode_nota"] == $kode_nota) {
+                        $nomor_nota++;
+                        if ($nomor_nota < 10) {
+                            $nomor_nota = "000" . $nomor_nota;
+                        } else if ($nomor_nota < 100) {
+                            $nomor_nota = "00" . $nomor_nota;
+                        } else if ($nomor_nota < 1000) {
+                            $nomor_nota = "0" . $nomor_nota;
+                        }
+                    } else {
+                        $nomor_nota = "0001";
+                    }
+                } else {
+                    $nomor_nota = "0001";
+                }
                 $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first();
                 if ($temp_status != NULL) {
                     if ($temp_status["status"] == 1) {
@@ -245,7 +311,9 @@ class Transaksi extends BaseController
                     "id_transaksi" => uniqid(),
                     "id_pelanggan" => $this->request->getPost("pelanggan"),
                     "tanggal" => $date->format('Y-m-d'),
-                    "status" => 2
+                    "status" => 2,
+                    "kode_nota" => $kode_nota,
+                    "nomor_nota" => $nomor_nota
                 ];
                 $transaksi->insert($data);
 
@@ -310,11 +378,13 @@ class Transaksi extends BaseController
         $pelanggan = new DataPelangganModel();
         $barang = new DataBarangModel();
         $layanan = new DataLayananModel();
+        $profil = new ProfilModel();
         $barang_order = new BarangOrderModel();
         $layanan_order = new LayananOrderModel();
         $jumlah_barang = $this->request->getPost("jumlah_barang");
         $jumlah_layanan = $this->request->getPost("jumlah_layanan");
-
+        $kode_nota = $profil->first()["kode_nota"];
+        $id_pelanggan = $this->request->getPost("id_pelanggan");
 
         $dataPelanggan = [
             'id_pelanggan' => uniqid(),
@@ -328,6 +398,20 @@ class Transaksi extends BaseController
         $date = new DateTime("now");
         if ($jumlah_barang >= $jumlah_layanan) {
             for ($i = 0; $i < $jumlah_barang; $i++) {
+                $nota = $transaksi->last();
+                $nomor_nota = (int)$nota["nomor_nota"];
+                if ($nomor_nota != NULL && $nota["kode_nota"] && $nota["id_pelanggan"] == $id_pelanggan && $nota["tanggal"] == $date->format('Y-m-d')) {
+                    $nomor_nota++;
+                    if ($nomor_nota < 10) {
+                        $nomor_nota = "000" . $nomor_nota;
+                    } else if ($nomor_nota < 100) {
+                        $nomor_nota = "00" . $nomor_nota;
+                    } else if ($nomor_nota < 1000) {
+                        $nomor_nota = "0" . $nomor_nota;
+                    }
+                } else {
+                    $nomor_nota = "0001";
+                }
                 $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first();
                 if ($temp_status != NULL) {
                     if ($temp_status["status"] == 1) {
@@ -401,6 +485,20 @@ class Transaksi extends BaseController
             }
         } else {
             for ($i = 0; $i < $jumlah_layanan; $i++) {
+                $nota = $transaksi->last();
+                $nomor_nota = (int)$nota["nomor_nota"];
+                if ($nomor_nota != NULL && $nota["kode_nota"] && $nota["id_pelanggan"] == $id_pelanggan && $nota["tanggal"] == $date->format('Y-m-d')) {
+                    $nomor_nota++;
+                    if ($nomor_nota < 10) {
+                        $nomor_nota = "000" . $nomor_nota;
+                    } else if ($nomor_nota < 100) {
+                        $nomor_nota = "00" . $nomor_nota;
+                    } else if ($nomor_nota < 1000) {
+                        $nomor_nota = "0" . $nomor_nota;
+                    }
+                } else {
+                    $nomor_nota = "0001";
+                }
                 $temp_status = $transaksi->where(["id_pelanggan" => $this->request->getPost("pelanggan"), "tanggal" => $date->format('Y-m-d')])->first();
                 if ($temp_status != NULL) {
                     if ($temp_status["status"] == 1) {

@@ -65,6 +65,9 @@ $routes->get('/transaksi/delete/(:any)', 'Transaksi::deleteTransaksi/$1');
 $routes->get('pelanggan', 'PelangganController::index');
 $routes->get('pelanggan/create', 'PelangganController::create');
 $routes->post('pelanggan/store', 'PelangganController::store');
+$routes->get('pelanggan/importFile', 'PelangganController::importFile');
+$routes->post('pelanggan/import', 'PelangganController::import');
+$routes->get('pelanggan/export', 'PelangganController::export');
 $routes->get('pelanggan/(:segment)/edit', 'PelangganController::edit/$1');
 $routes->get('pelanggan/(:segment)/delete', 'PelangganController::delete/$1');
 $routes->post('pelanggan/update/(:segment)', 'PelangganController::update/$1');
@@ -81,6 +84,9 @@ $routes->post('barang/store', 'BarangController::store');
 $routes->get('barang/(:segment)/edit', 'BarangController::edit/$1');
 $routes->get('barang/(:segment)/delete', 'BarangController::delete/$1');
 $routes->post('barang/update/(:segment)', 'BarangController::update/$1');
+$routes->get('barang/importFile', 'BarangController::importFile');
+$routes->post('barang/import', 'BarangController::import');
+$routes->get('barang/export', 'BarangController::export');
 
 // Route for Layanan
 $routes->get('layanan', 'LayananController::index');
@@ -89,6 +95,9 @@ $routes->post('layanan/store', 'LayananController::store');
 $routes->get('layanan/(:segment)/edit', 'LayananController::edit/$1');
 $routes->get('layanan/(:segment)/delete', 'LayananController::delete/$1');
 $routes->post('layanan/update/(:segment)', 'LayananController::update/$1');
+$routes->get('layanan/importFile', 'LayananController::importFile');
+$routes->post('layanan/import', 'LayananController::import');
+$routes->get('layanan/export', 'LayananController::export');
 
 // Route for PKS
 $routes->get('pks', 'PksController::index');

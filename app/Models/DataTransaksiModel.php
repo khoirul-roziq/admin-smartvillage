@@ -11,5 +11,5 @@ class DataTransaksiModel extends Model
 
     protected $returnType = 'array';
 
-    protected $allowedFields = ['id_transaksi', 'id_pelanggan', 'kode_barang', 'qty', 'kode_layanan', 'total', 'tanggal', 'status'];
+    protected $allowedFields = ['id_transaksi', 'id_pelanggan', 'kode_barang', 'qty', 'kode_layanan', 'total', 'tanggal', 'status', 'kode_nota', 'nomor_nota'];
 }

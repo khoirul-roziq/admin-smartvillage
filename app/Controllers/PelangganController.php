@@ -2,9 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
+use CodeIgniter\Config\Services;
 
 use App\Models\DataPelangganModel;
+use App\Controllers\BaseController;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class PelangganController extends BaseController
 {
@@ -33,6 +36,15 @@ class PelangganController extends BaseController
             'validation' => \Config\Services::validation()
         ];
         return view('templates/header', ["title" => "Pelanggan"]) . view('templates/menu') . view('admin/pelanggan/create', $data);
+    }
+
+    public function importFile()
+    {
+        $data = [
+            'title' => 'Data Pelanggan',
+            'validation' => \Config\Services::validation()
+        ];
+        return view('templates/header', ["title" => "Pelanggan"]) . view('templates/menu') . view('admin/pelanggan/import', $data);
     }
 
     public function store()
@@ -176,6 +188,79 @@ class PelangganController extends BaseController
         $pelangganModel = new DataPelangganModel();
         $pelangganModel->delete($id);
         session()->setFlashdata('massage', 'Data Pelanggan Berhasil Dihapus!');
+        return redirect('pelanggan');
+    }
+
+    //fungsi export data pelanggan ke excel
+    public function export()
+    {
+        $pelangganModel = new DataPelangganModel();
+        $pelanggan = $pelangganModel->findAll();
+
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'No')
+            ->setCellValue('B1', 'Nama Pelanggan')
+            ->setCellValue('C1', 'Nama Desa')
+            ->setCellValue('D1', 'Nomor Telepon')
+            ->setCellValue('E1', 'Email')
+            ->setCellValue('F1', 'Alamat');
+
+        $kolom = 2;
+        $nomor = 1;
+        foreach ($pelanggan as $p) {
+            $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('A' . $kolom, $nomor)
+                ->setCellValue('B' . $kolom, $p['nama_pelanggan'])
+                ->setCellValue('C' . $kolom, $p['nama_desa'])
+                ->setCellValue('D' . $kolom, $p['no_telp'])
+                ->setCellValue('E' . $kolom, $p['email'])
+                ->setCellValue('F' . $kolom, $p['alamat']);
+            $kolom++;
+            $nomor++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Data Pelanggan';
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+        ob_end_clean();
+        $writer->save('php://output');
+        die();
+    }
+
+    //fungsi import data pelanggan dari excel
+    public function import()
+    {
+        $file = $this->request->getFile('file');
+        $file->move('file');
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $spreadsheet = $reader->load('file/' . $file->getName());
+        $data = $spreadsheet->getActiveSheet()->toArray();
+
+        // print_r($data);
+        $data2 = [];
+        $pelangganModel = new DataPelangganModel();
+        foreach ($data as $d) {
+            array_push(
+                $data2,
+                [
+                    'id_pelanggan' => uniqid(),
+                    'nama_pelanggan' => $d[1],
+                    'nama_desa' => $d[2],
+                    'no_telp' => $d[3],
+                    'email' => $d[4],
+                    'alamat' => $d[5]
+                ]
+            );
+        }
+        unset($data2[0]);
+        print_r($data2);
+        $pelangganModel->insertBatch($data2);
+
+        session()->setFlashdata('massage', 'Data Pelanggan Berhasil Diimport!');
         return redirect('pelanggan');
     }
 }

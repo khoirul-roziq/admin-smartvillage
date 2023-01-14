@@ -76,7 +76,7 @@
 
                             <button onclick="
                             if(confirm('Jadikan status transaksi Approve!')){
-                            window.location.href=`<?= base_url('/transaksi/approved/' . $data['id_pelanggan'] . '/' . $data['tanggal']) ?>`
+                            window.location.href=`<?= base_url('/transaksi/approve/' . $data['id_pelanggan'] . '/' . $data['tanggal']) ?>`
                             }" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-green-600 rounded-lg dark:text-black-400 focus:outline-none focus:shadow-outline-gray" aria-label="Approve">
                               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />

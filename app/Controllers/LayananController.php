@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\DataLayananModel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class LayananController extends BaseController
 {
@@ -143,5 +145,91 @@ class LayananController extends BaseController
         $layananModel->delete($kodeLayanan);
         session()->setFlashdata('massage', 'Data Layanan Berhasil Dihapus!');
         return redirect('layanan');
+    }
+
+    //fungsi export data barang ke excel
+    public function export()
+    {
+        $layananModel = new DataLayananModel();
+        $layanan = $layananModel->findAll();
+
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'Kode Layanan')
+            ->setCellValue('B1', 'Nama Layanan')
+            ->setCellValue('C1', 'Harga Layanan');
+
+        $kolom = 2;
+        $nomor = 1;
+        foreach ($layanan as $data) {
+            $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('A' . $kolom, $data['kode_layanan'])
+                ->setCellValue('B' . $kolom, $data['nama_layanan'])
+                ->setCellValue('C' . $kolom, $data['harga_layanan']);
+            $kolom++;
+            $nomor++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Data Layanan';
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+        ob_end_clean();
+        $writer->save('php://output');
+        die();
+    }
+
+    public function importFile()
+    {
+        $data = [
+            'title' => 'Data Layanan',
+            'validation' => \Config\Services::validation()
+        ];
+        return view('templates/header', ["title" => "Pelanggan"]) . view('templates/menu') . view('admin/layanan/import', $data);
+    }
+
+    //fungsi import data barang dari excel
+    public function import()
+    {
+        $db = \Config\Database::connect();
+        $layananModel = new DataLayananModel();
+
+        $file = $this->request->getFile('file');
+        $ext = $file->getClientExtension();
+
+        if ($ext == 'xlsx') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        } else {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+        }
+
+        $spreadsheet = $reader->load($file);
+        $data = $spreadsheet->getActiveSheet()->toArray();
+
+        $data2= [];
+        $jumlah = count($data);
+        if ($jumlah > 1) {
+            for ($i = 1; $i < $jumlah; $i++) {
+                $kode_layanan = $data[$i]['0'];
+                $nama_layanan = $data[$i]['1'];
+                $harga_layanan = $data[$i]['2'];
+                // print($kode_layanan)
+                array_push($data2, 
+                    [
+                        'kode_layanan' => $kode_layanan,
+                        'nama_layanan' => $nama_layanan,
+                        'harga_layanan' => $harga_layanan
+                    ]
+                );
+            }
+            $layananModel->insertBatch($data2);
+            session()->setFlashdata('massage', 'Data Layanan Berhasil Diimport!');
+            return redirect('layanan');
+        } else {
+            session()->setFlashdata('massage', 'Data Layanan Gagal Diimport!');
+            return redirect('layanan');
+        }
     }
 }

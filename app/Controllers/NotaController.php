@@ -47,6 +47,8 @@ class NotaController extends BaseController
                     "tanggal" => $order["tanggal"],
                     "kode_barang" => $order["kode_barang"],
                     "kode_layanan" => $order["kode_layanan"],
+                    "kode_nota" => $order["kode_nota"],
+                    "nomor_nota" => $order["nomor_nota"]
                 ];
 
                 array_push($data, $data2);
@@ -68,6 +70,8 @@ class NotaController extends BaseController
                     "tanggal" => $order["tanggal"],
                     "kode_barang" => $order["kode_barang"],
                     "kode_layanan" => $order["kode_layanan"],
+                    "kode_nota" => $order["kode_nota"],
+                    "nomor_nota" => $order["nomor_nota"]
                 ];
 
                 array_push($data, $data2);
@@ -89,6 +93,8 @@ class NotaController extends BaseController
                     "tanggal" => $order["tanggal"],
                     "kode_barang" => $order["kode_barang"],
                     "kode_layanan" => $order["kode_layanan"],
+                    "kode_nota" => $order["kode_nota"],
+                    "nomor_nota" => $order["nomor_nota"]
                 ];
 
                 array_push($data, $data2);
